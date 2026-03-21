@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js'
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoutes.js';
+import companyRouter from "./routes/companyRoutes.js";
 
 dotenv.config();
 
@@ -19,7 +20,8 @@ app.use("/health" , (req,res)=>{
     })
 });
 
-app.use("/auth" ,authRouter);
+app.use("/api/auth" ,authRouter);
+app.use("/api/companies",companyRouter);
 
 const startServer = async()=>{
     try{
