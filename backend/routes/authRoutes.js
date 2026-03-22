@@ -4,9 +4,9 @@ import { register , login , logout } from '../controller/authController.js';
 
 const authRouter = express.Router();
 
-authRouter.post("/api/register" , register);
-authRouter.post("/api/login" , login);
-authRouter.get("/api/profile" , protect , (req,res)=>{
+authRouter.post("/register" , register);
+authRouter.post("/login" , login);
+authRouter.get("/profile" , protect , (req,res)=>{
     res.json({
         success : true , 
         user : req.user

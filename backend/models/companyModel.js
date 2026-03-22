@@ -9,7 +9,7 @@ const companySchema = new mongoose.Schema({
     logo : {
         type : String
     },
-    package : {
+    offeredPackage : {
         type : Number,
         required : true
     },
