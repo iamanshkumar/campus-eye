@@ -21,7 +21,17 @@ const commentSchema = new mongoose.Schema({
     replies : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "Comment"
-    }]
+    }],
+    parentComment : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Comment",
+        default : null
+    },
+    user : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "User",
+        required : true
+    }
 },{
     timestamps : true
 });

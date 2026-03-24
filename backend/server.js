@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoutes.js';
 import companyRouter from "./routes/companyRoutes.js";
 import experienceRouter from './routes/experienceRoutes.js';
+import commentRouter from "./routes/commentRoutes.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use("/health" , (req,res)=>{
 app.use("/api/auth" ,authRouter);
 app.use("/api/companies",companyRouter);
 app.use("/api/experiences" , experienceRouter);
+app.use("/api/comments",commentRouter);
 
 const startServer = async()=>{
     try{
