@@ -140,3 +140,55 @@ export const deleteComment = async(req,res)=>{
         })
     }
 }
+
+export const upvoteComment = async(req,res)=>{
+    const {id} = req.params;
+    try{
+        const comment = await Comment.findById(id);
+        if(!comment){
+            return res.status(404).json({
+                success : false,
+                message : "Comment not found"
+            })
+        }
+    
+        const updatedComment = await Comment.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, { new: true });
+    
+        return res.status(200).json({
+            success : true,
+            message : "Comment upvoted successfully",
+            data : updatedComment
+        })
+    }catch(err){
+        return res.status(500).json({
+            success : false,
+            message : `Error in upvoting experience ${err}`
+        })
+    }
+}
+
+export const downvoteComment = async(req,res)=>{
+    const {id} = req.params;
+    try{
+        const comment = await Comment.findById(id);
+        if(!comment){
+            return res.status(404).json({
+                success : false,
+                message : "Comment not found"
+            })
+        }
+    
+        const updatedComment = await Comment.findByIdAndUpdate(id, { $inc: { downvotes: 1 } }, { new: true });
+    
+        return res.status(200).json({
+            success : true,
+            message : "Comment upvoted successfully",
+            data : updatedComment
+        })
+    }catch(err){
+        return res.status(500).json({
+            success : false,
+            message : `Error in upvoting experience ${err}`
+        })
+    }
+}

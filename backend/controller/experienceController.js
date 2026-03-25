@@ -111,3 +111,55 @@ export const deleteExperience = async(req,res)=>{
         })
     }
 }
+
+export const upvoteExperience = async(req,res)=>{
+    const {id} = req.params;
+    try{
+        const experience = await Experience.findById(id);
+        if(!experience){
+            return res.status(404).json({
+                success : false,
+                message : "Experience not found"
+            })
+        }
+
+        const updatedExperience = await Experience.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, { new: true });
+
+        return res.status(200).json({
+            success : true,
+            message : "Experience upvoted successfully",
+            data : updatedExperience
+        })
+    }catch(err){
+        return res.status(500).json({
+            success : false,
+            message : `Error in upvoting experience ${err}`
+        })
+    }
+}
+
+export const downvoteExperience = async(req,res)=>{
+    const {id} = req.params;
+    try{
+        const experience = await Experience.findById(id);
+        if(!experience){
+            return res.status(404).json({
+                success : false,
+                message : "Experience not found"
+            })
+        }
+
+        const updatedExperience = await Experience.findByIdAndUpdate(id, { $inc: { downvotes: 1 } }, { new: true });
+
+        return res.status(200).json({
+            success : true,
+            message : "Experience downvoted successfully",
+            data : updatedExperience
+        })
+    }catch(err){
+        return res.status(500).json({
+            success : false,
+            message : `Error in downvoting experience ${err}`
+        })
+    }
+}
