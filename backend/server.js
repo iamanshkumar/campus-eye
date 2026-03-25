@@ -7,6 +7,7 @@ import companyRouter from "./routes/companyRoutes.js";
 import experienceRouter from './routes/experienceRoutes.js';
 import commentRouter from "./routes/commentRoutes.js";
 import companyStatusRouter from './routes/companyStatusRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use("/api/companies",companyRouter);
 app.use("/api/experiences" , experienceRouter);
 app.use("/api/comments",commentRouter);
 app.use("/api/status" , companyStatusRouter);
+app.use("/api/user" , userRouter);
 
 const startServer = async()=>{
     try{
