@@ -6,6 +6,7 @@ import authRouter from './routes/authRoutes.js';
 import companyRouter from "./routes/companyRoutes.js";
 import experienceRouter from './routes/experienceRoutes.js';
 import commentRouter from "./routes/commentRoutes.js";
+import companyStatusRouter from './routes/companyStatusRoutes.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/auth" ,authRouter);
 app.use("/api/companies",companyRouter);
 app.use("/api/experiences" , experienceRouter);
 app.use("/api/comments",commentRouter);
+app.use("/api/status" , companyStatusRouter);
 
 const startServer = async()=>{
     try{
