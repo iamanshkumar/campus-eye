@@ -8,6 +8,7 @@ import experienceRouter from './routes/experienceRoutes.js';
 import commentRouter from "./routes/commentRoutes.js";
 import companyStatusRouter from './routes/companyStatusRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -16,29 +17,30 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
-app.use("/health" , (req,res)=>{
+app.use("/health", (req, res) => {
     res.json({
-        success : true , 
-        message : "Server is running"
+        success: true,
+        message: "Server is running"
     })
 });
 
-app.use("/api/auth" ,authRouter);
-app.use("/api/companies",companyRouter);
-app.use("/api/experiences" , experienceRouter);
-app.use("/api/comments",commentRouter);
-app.use("/api/status" , companyStatusRouter);
-app.use("/api/user" , userRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/companies", companyRouter);
+app.use("/api/experiences", experienceRouter);
+app.use("/api/comments", commentRouter);
+app.use("/api/status", companyStatusRouter);
+app.use("/api/user", userRouter);
 
-const startServer = async()=>{
-    try{
+const startServer = async () => {
+    try {
         await connectDB();
-        app.listen(PORT,()=>{
-            console.log("Server running on port : " , PORT);
-        })    
-    }catch(err){
-        console.log("Error in connecting server : " , err);
+        app.listen(PORT, () => {
+            console.log("Server running on port : ", PORT);
+        })
+    } catch (err) {
+        console.log("Error in connecting server : ", err);
     }
 }
 
