@@ -44,7 +44,7 @@ const LoginPage = () => {
     return (
         <div className="flex min-h-screen items-center justify-center bg-amber-50">
             <div className="p-8 pb-2.5 bg-emerald-900 rounded-2xl shadow-xl">
-                <h2 className="text-2xl pb-3 text-amber-50 font-bold">Welcome back!</h2>
+                <h2 className="text-2xl pb-3 text-amber-50 font-bold">{state==='Login'? "Welcome Back!" : "Join Campus Eye"}</h2>
                 <form className="flex flex-col gap-2.5 w-80" onSubmit={handleSubmit}>
                     {state === 'Register' ?
                         <div className='flex flex-col gap-2.5 c'>
@@ -129,7 +129,19 @@ const LoginPage = () => {
                     <div className="h-[1px] w-full bg-emerald-800 my-1"></div>
                     <p className="text-emerald-100 text-sm hover:underline transition duration-500 cursor-pointer" onClick={() => {
                         state === 'Login' ? setState('Register') : setState('Login')
-                    }}>Don't have an account? <span className="text-sm text-amber-50">Register Here</span></p>
+                    }}>{
+                        state === 'Login' ? (
+                          <p>
+                            Don't have an account?{" "}
+                            <span className="text-sm text-amber-50">Register Here</span>
+                          </p>
+                        ) : (
+                          <p>
+                            Already have an account?{" "}
+                            <span className="text-sm text-amber-50">Login Here</span>
+                          </p>
+                        )
+                      }</p>
                 </div>
 
 
