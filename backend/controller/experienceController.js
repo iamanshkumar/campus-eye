@@ -41,7 +41,7 @@ export const getAllExperience = async(req,res)=>{
             filter.company = req.query.company;
         }
 
-        const experiences = await Experience.find(filter);
+        const experiences = await Experience.find(filter).populate('user' , "fullName username").populate('company','name logo').populate('comments');
 
         return res.status(200).json({
             success : true,
