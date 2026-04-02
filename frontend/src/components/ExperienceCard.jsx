@@ -1,8 +1,9 @@
-import React from 'react'
+import React , {useState} from 'react'
 import {ArrowUp , ArrowDown , MessageCircle} from 'lucide-react'
+import CommentSection from './CommentSection';
 
 const ExperienceCard = ({experience}) => {
-    
+    const[showComments , setShowComments] = useState(false);
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 p-5 mb-5">
         <div className='flex justify-between items-center mb-3'>
@@ -43,9 +44,13 @@ const ExperienceCard = ({experience}) => {
 
         <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition">
           <MessageCircle size={18} />
-          <span className="text-sm">Comments</span>
+          <span className="text-sm" onClick={()=>setShowComments(!showComments)}>Comments</span>
         </button>
       </div>
+
+      {showComments && (
+        <CommentSection experienceID={experience._id} />
+      )}
 
     </div>
   )
