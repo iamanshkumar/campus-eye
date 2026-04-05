@@ -163,6 +163,7 @@ export const deleteComment = async(req,res)=>{
 
 export const upvoteComment = async(req,res)=>{
     const {id} = req.params;
+    const userId = req.user._id;
     try{
         const comment = await Comment.findById(id);
         if(!comment){
@@ -171,24 +172,35 @@ export const upvoteComment = async(req,res)=>{
                 message : "Comment not found"
             })
         }
+
+        const hasUpvoted = comment.upvotes.includes(userId);
+        const hasDownvoted = comment.downvotes.includes(userId);
+
+        if(hasUpvoted){
+            comment.upvotes.pull(userId);
+        }else{
+            comment.upvotes.push(userId);
+            if (hasDownvoted) comment.downvotes.pull(userId);
+        }
     
-        const updatedComment = await Comment.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, { new: true });
+        await comment.save();
     
         return res.status(200).json({
             success : true,
-            message : "Comment upvoted successfully",
-            data : updatedComment
+            message : "Comment upvote toggled successfully",
+            data : comment
         })
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Error in upvoting experience ${err}`
+            message : `Error in upvoting comment ${err}`
         })
     }
 }
 
 export const downvoteComment = async(req,res)=>{
     const {id} = req.params;
+    const userId = req.user._id;
     try{
         const comment = await Comment.findById(id);
         if(!comment){
@@ -197,18 +209,28 @@ export const downvoteComment = async(req,res)=>{
                 message : "Comment not found"
             })
         }
-    
-        const updatedComment = await Comment.findByIdAndUpdate(id, { $inc: { downvotes: 1 } }, { new: true });
+
+        const hasUpvoted = comment.upvotes.includes(userId);
+        const hasDownvoted = comment.downvotes.includes(userId);
+
+        if (hasDownvoted) {
+            comment.downvotes.pull(userId);
+        } else {
+            comment.downvotes.push(userId);
+            if (hasUpvoted) comment.upvotes.pull(userId);
+        }
+
+        await comment.save();
     
         return res.status(200).json({
             success : true,
-            message : "Comment upvoted successfully",
-            data : updatedComment
+            message : "Comment downvote toggled successfully",
+            data : comment
         })
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Error in upvoting experience ${err}`
+            message : `Error in downvoting comment ${err}`
         })
     }
 }

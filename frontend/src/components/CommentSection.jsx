@@ -29,8 +29,7 @@ const CommentSection = ({ experienceID }) => {
 
         setIsSubmitting(true);
         try{
-            const res = await axios.post(`/api/comments`,{experienceId: experienceID, // Make sure casing matches what your backend expects!
-        description: newText,},
+            const res = await axios.post(`/api/comments`,{experienceId: experienceID,description: newText,},
                 {withCredentials:true}
             );
 

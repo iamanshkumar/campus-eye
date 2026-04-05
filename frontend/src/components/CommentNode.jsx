@@ -8,6 +8,15 @@ const CommentNode = ({comment ,experienceID})=>{
     const [replyText , setReplyText] = useState('');
     const [isSubmitting , setIsSubmitting] = useState(false);
     const [localReplies , setLocalReplies] = useState(comment.replies || []);
+    
+    const getCount = (votes) => {
+        if (Array.isArray(votes)) return votes.length;
+        if (typeof votes === 'number') return votes;
+        return 0;
+    };
+
+    const [upvotes, setUpvotes] = useState(getCount(comment.upvotes));
+    const [downvotes, setDownvotes] = useState(getCount(comment.downvotes));
 
     const handleReplySubmit = async(e)=>{
         e.preventDefault();
@@ -38,6 +47,30 @@ const CommentNode = ({comment ,experienceID})=>{
                 setIsSubmitting(false);
             }
     }
+
+    const handleUpvote = async()=>{
+        setUpvotes(prev=>prev+1);
+        try{
+            const res = await axios.put(`/api/comments/${comment._id}/upvote`, {}, { withCredentials: true });
+            setUpvotes(res.data.data.upvotes.length);
+            setDownvotes(res.data.data.downvotes.length);
+        }catch(err){
+            setUpvotes(prev => prev - 1);
+            toast.error("Failed to upvote");
+        }
+    }
+
+    const handleDownvote = async () => {
+        setDownvotes(prev => prev + 1); 
+        try {
+            const res = await axios.put(`/api/comments/${comment._id}/downvote`, {}, { withCredentials: true });
+            setUpvotes(res.data.data.upvotes.length);
+            setDownvotes(res.data.data.downvotes.length);
+        } catch (err) {
+            setDownvotes(prev => prev - 1);
+            toast.error("Failed to downvote");
+        }
+    };
     return (
         <div className="bg-white p-3 rounded-lg text-sm border border-gray-100 shadow-sm mb-3">
         <div className="flex gap-2 items-center mb-1">
@@ -48,14 +81,14 @@ const CommentNode = ({comment ,experienceID})=>{
         <p className="text-gray-700 mt-1 mb-2">{comment.description}</p>
 
         <div className="flex items-center gap-4 border-t pt-2 mt-2">
-            <button className="flex items-center gap-1 text-gray-500 hover:text-green-600 transition">
+            <button onClick={handleUpvote} className="flex items-center gap-1 text-gray-500 hover:text-green-600 transition">
                 <ArrowUp size={16}/>
-                <span className="text-xs">{comment.upvotes || 0}</span>
+                <span className="text-xs">{upvotes}</span>
             </button>
 
-            <button className="flex items-center gap-1 text-gray-500 hover:text-red-500 transition">
+            <button onClick={handleDownvote} className="flex items-center gap-1 text-gray-500 hover:text-red-500 transition">
                 <ArrowDown size={16}/>
-                <span className="text-xs">{comment.downvotes || 0}</span>
+                <span className="text-xs">{downvotes}</span>
             </button>
 
             <button onClick={()=>setIsReplying(!isReplying)}
