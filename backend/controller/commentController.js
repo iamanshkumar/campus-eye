@@ -21,7 +21,7 @@ export const addComment = async(req , res)=>{
         }
 
         if(description.trim().length===0){
-            return res.json.status(400).json({
+            return res.status(400).json({
                 success : false,
                 message : "Comment cannot be empty"
             })
@@ -54,6 +54,8 @@ export const addComment = async(req , res)=>{
             }
         }
 
+        await comment.populate("user" , "fullName");
+
         return res.status(201).json({
             success : true,
             message : "Comment added successfully",
@@ -70,17 +72,35 @@ export const addComment = async(req , res)=>{
 export const getComments = async(req, res)=>{
     const {experienceId} = req.params;
     try{
-        const comments = await Comment.find({experience : experienceId}).populate("user" , "fullName username")
+        const allComments = await Comment.find({experience : experienceId}).populate("user" , "fullName username").sort({createdAt : 1}).lean();
+        const commentMap = {}
+        const topLevelComments = [];
+
+        allComments.forEach(comment=>{
+            comment.replies = [];
+            commentMap[comment._id.toString()]=comment;
+        })
+
+        allComments.forEach(comment=>{
+            if(comment.parentComment){
+                const parent = commentMap[comment.parentComment.toString()];
+                if(parent){
+                    parent.replies.push(comment);
+                }
+            }else{
+                topLevelComments.push(comment);
+            }
+        })
 
         return res.status(200).json({
             success : true,
             message : "Comments fetched successfully",
-            data : comments
+            data : topLevelComments
         })
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Fetching comments error : ${err}`
+            message : `Fetching comments error : ${err.message}`
         })
     }
 }

@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     }, [])
 
     const login = async (email, password) => {
-        const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, { email, password }, { withCredentials: true });
+        const { data } = await axios.post(`/api/auth/login`, { email, password }, { withCredentials: true });
         const userData = data.user;
         setUser(userData);
         localStorage.setItem("currentUser", JSON.stringify(userData));
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     const register = async (fullName, username, email, password, cgpa, branch, year) => {
-        const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, { fullName, username, email, password, cgpa, branch, year }, { withCredentials: true });
+        const { data } = await axios.post(`/api/auth/register`, { fullName, username, email, password, cgpa, branch, year }, { withCredentials: true });
         const userData = data.user;
         setUser(userData);
         localStorage.setItem("currentUser", JSON.stringify(userData));
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {}, { withCredentials: true });
+            await axios.post(`/api/auth/logout`, {}, { withCredentials: true });
         } catch (err) {
             console.error("Logout failed", err);
         } finally {

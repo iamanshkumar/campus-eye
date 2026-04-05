@@ -10,7 +10,7 @@ const InterviewExperience = () => {
 
   const fetchData = async () => {
     try {
-      const {data} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/experiences`,{
+      const {data} = await axios.get(`/api/experiences`,{
         withCredentials : true
       });
       setExperiences(data.data);

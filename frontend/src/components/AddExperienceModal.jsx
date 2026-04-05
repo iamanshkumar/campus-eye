@@ -13,7 +13,7 @@ const AddExperienceModal = ({ isOpen, onClose, onSuccess }) => {
   useEffect(() => {
     const fetchCompanies = async () => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/companies`,
+        `/api/companies`,
       {withCredentials : true});
       setCompanies(data.data);
     };
@@ -25,7 +25,7 @@ const AddExperienceModal = ({ isOpen, onClose, onSuccess }) => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/experiences`,
+        `/api/experiences`,
         { description: experience, company },
         { withCredentials: true },
       );

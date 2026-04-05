@@ -7,7 +7,7 @@ const Timeline = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/companies`, {
+                const { data } = await axios.get(`/api/companies`, {
                     withCredentials: true
                 });
                 setCompanies(data.data)

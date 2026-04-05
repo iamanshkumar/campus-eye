@@ -42,9 +42,9 @@ const ExperienceCard = ({experience}) => {
           </button>
         </div>
 
-        <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition">
+        <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition cursor-pointer" onClick={()=>setShowComments(!showComments)}>
           <MessageCircle size={18} />
-          <span className="text-sm" onClick={()=>setShowComments(!showComments)}>Comments</span>
+          <span className="text-sm">Comments</span>
         </button>
       </div>
 
