@@ -115,6 +115,7 @@ export const deleteExperience = async(req,res)=>{
 
 export const upvoteExperience = async(req,res)=>{
     const {id} = req.params;
+    const userId = req.user._id;
     try{
         const experience = await Experience.findById(id);
         if(!experience){
@@ -124,12 +125,22 @@ export const upvoteExperience = async(req,res)=>{
             })
         }
 
-        const updatedExperience = await Experience.findByIdAndUpdate(id, { $inc: { upvotes: 1 } }, { new: true });
+        const hasUpvoted = experience.upvotes.includes(userId);
+        const hasDownvoted = experience.downvotes.includes(userId);
+
+        if(hasUpvoted){
+            experience.upvotes.pull(userId);
+        } else {
+            experience.upvotes.push(userId);
+            if(hasDownvoted) experience.downvotes.pull(userId);
+        }
+
+        await experience.save();
 
         return res.status(200).json({
             success : true,
             message : "Experience upvoted successfully",
-            data : updatedExperience
+            data : experience
         })
     }catch(err){
         return res.status(500).json({
@@ -141,6 +152,7 @@ export const upvoteExperience = async(req,res)=>{
 
 export const downvoteExperience = async(req,res)=>{
     const {id} = req.params;
+    const userId = req.user._id;
     try{
         const experience = await Experience.findById(id);
         if(!experience){
@@ -150,12 +162,21 @@ export const downvoteExperience = async(req,res)=>{
             })
         }
 
-        const updatedExperience = await Experience.findByIdAndUpdate(id, { $inc: { downvotes: 1 } }, { new: true });
+        const hasUpvoted = experience.upvotes.includes(userId);
+        const hasDownvoted = experience.downvotes.includes(userId);
 
+        if(hasDownvoted){
+            experience.downvotes.pull(userId);
+        } else {
+            experience.downvotes.push(userId);
+            if(hasUpvoted) experience.upvotes.pull(userId);
+        }
+
+        await experience.save();
         return res.status(200).json({
             success : true,
             message : "Experience downvoted successfully",
-            data : updatedExperience
+            data : experience
         })
     }catch(err){
         return res.status(500).json({
