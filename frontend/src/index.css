@@ -3,3 +3,7 @@
 @theme{
   --font-display : "Inter" , sans-serif;
 }
+
+body {
+  @apply bg-amber-50;
+}
