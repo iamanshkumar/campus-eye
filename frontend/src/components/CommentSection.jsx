@@ -48,6 +48,10 @@ const CommentSection = ({ experienceID }) => {
         }
     }
 
+    const removeCommentFromUI = (commentId)=>{
+        setComments(prev=>prev.filter(c=>c._id!==commentId));
+    }
+
     return (
         <div>
             
@@ -79,7 +83,11 @@ const CommentSection = ({ experienceID }) => {
                 <div className="space-y-1">
                     {comments.length>0 ? (
                         comments.map((c)=>(
-                            <CommentNode key={c._id} comment={c} experienceID={experienceID}/>
+                            <CommentNode 
+                            key={c._id} 
+                            comment={c} 
+                            experienceID={experienceID}
+                            onDeleteTopLevel={removeCommentFromUI}/>
                         ))
                     ) : <p className="text-sm text-gray-500 italic ml-1">No comments yet. Be the first to share your thoughts!</p>}
                 </div>

@@ -1,9 +1,12 @@
 import React , {useState} from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import {ArrowUp , ArrowDown , MessageCircle , X} from 'lucide-react';
+import {ArrowUp , ArrowDown , MessageCircle , Trash2 , ShieldCheck} from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
-const CommentNode = ({comment ,experienceID})=>{
+const CommentNode = ({comment ,experienceID , onDeleteTopLevel})=>{
+    const {user} = useAuth();
+
     const [isReplying , setIsReplying] = useState(false);
     const [replyText , setReplyText] = useState('');
     const [isSubmitting , setIsSubmitting] = useState(false);
@@ -17,6 +20,23 @@ const CommentNode = ({comment ,experienceID})=>{
 
     const [upvotes, setUpvotes] = useState(getCount(comment.upvotes));
     const [downvotes, setDownvotes] = useState(getCount(comment.downvotes));
+    
+    const hasUpvoted = comment.upvotes?.includes(user?._id);
+    const hasDownvoted = comment.downvotes?.includes(user?._id);
+
+
+    const handleDelete = async()=>{
+        if (!window.confirm("Are you sure you want to delete this comment?")) return;
+        try{
+            await axios.delete(`/api/comments/${comment._id}`, { withCredentials: true });
+            toast.success("Comment deleted");
+            if (onDeleteTopLevel) {
+                onDeleteTopLevel(comment._id);
+            }
+        }catch(err){
+            toast.error(err.response?.data?.message || "Error deleting comment");
+        }
+    }
 
     const handleReplySubmit = async(e)=>{
         e.preventDefault();
@@ -73,21 +93,30 @@ const CommentNode = ({comment ,experienceID})=>{
     };
     return (
         <div className="bg-white p-3 rounded-lg text-sm border border-gray-100 shadow-sm mb-3">
-        <div className="flex gap-2 items-center mb-1">
-            <span className="font-bold text-gray-800">{comment.user?.fullName}</span>
-            <span className="font-medium text-gray-500">@{comment.user?.username}</span>
+            
+        <div className="flex justify-between items-start mb-1">
+                <div className="flex gap-2 items-center">
+                    <span className="font-bold text-gray-800">{comment.user?.fullName}</span>
+                    <span className="font-medium text-gray-500">@{comment.user?.username}</span>
+                </div>
+                
+                {(user?._id === comment.user?._id || user?.role === 'admin') && (
+                    <button onClick={handleDelete} className="text-gray-400 hover:text-red-500 transition cursor-pointer">
+                        <Trash2 size={14} />
+                    </button>
+                )}
         </div>
 
         <p className="text-gray-700 mt-1 mb-2">{comment.description}</p>
 
         <div className="flex items-center gap-4 border-t pt-2 mt-2">
             <button onClick={handleUpvote} className="flex items-center gap-1 text-gray-500 hover:text-green-600 transition">
-                <ArrowUp size={16}/>
+                <ArrowUp size={16} fill={hasUpvoted ? "currentColor" : "none"}/>
                 <span className="text-xs">{upvotes}</span>
             </button>
 
             <button onClick={handleDownvote} className="flex items-center gap-1 text-gray-500 hover:text-red-500 transition">
-                <ArrowDown size={16}/>
+                <ArrowDown size={16} fill={hasDownvoted ? "currentColor" : "none"}/>
                 <span className="text-xs">{downvotes}</span>
             </button>
 
@@ -137,7 +166,11 @@ const CommentNode = ({comment ,experienceID})=>{
         {localReplies && localReplies.length > 0 && (
             <div className="mt-3 pl-4 border-l-2 border-gray-100 space-y-2">
                 {localReplies.map((reply) => (
-                    <CommentNode key={reply._id} comment={reply} experienceID={experienceID} />
+                    <CommentNode key={reply._id} 
+                    comment={reply} 
+                    experienceID={experienceID} 
+                    onDeleteTopLevel={(id) => setLocalReplies(prev => prev.filter(r => r._id !== id))}
+                    />
                 ))}
             </div>
         )}
