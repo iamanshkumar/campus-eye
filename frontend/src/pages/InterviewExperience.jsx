@@ -20,6 +20,10 @@ const InterviewExperience = () => {
     }
   };
 
+  const removeExperienceFromUI = (id) => {
+    setExperiences(prev => prev.filter(exp => exp._id !== id));
+  };
+
   useEffect(() => {
     fetchData();
   }, [])
@@ -33,7 +37,10 @@ const InterviewExperience = () => {
           onSuccess={fetchData}
         />
       {experiences.map((experience)=>(
-        <ExperienceCard key={experience._id} experience={experience}></ExperienceCard>
+        <ExperienceCard key={experience._id} 
+        experience={experience}
+        onDelete={removeExperienceFromUI}
+        ></ExperienceCard>
       ))}
     </div>
   )
