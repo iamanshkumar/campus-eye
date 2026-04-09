@@ -24,11 +24,15 @@ export const AuthProvider = ({ children }) => {
         checkUser();
     }, [])
 
+    const updateUser = (data)=>{
+        setUser(data);
+        localStorage.setItem("currentUser", JSON.stringify(data));
+    }
+
     const login = async (email, password) => {
         const { data } = await axios.post(`/api/auth/login`, { email, password }, { withCredentials: true });
         const userData = data.user;
-        setUser(userData);
-        localStorage.setItem("currentUser", JSON.stringify(userData));
+        updateUser(userData);
         return data;
     }
 
@@ -39,6 +43,8 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("currentUser", JSON.stringify(userData));
         return data;
     }
+
+    
 
     const logout = async () => {
         try {
@@ -52,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, register, logout, loading, updateUser }}>
             {children}
         </AuthContext.Provider>
     )
