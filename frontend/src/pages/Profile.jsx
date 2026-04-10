@@ -2,6 +2,7 @@ import React , {useState} from 'react';
 import {useAuth} from '../context/AuthContext';
 import {Settings , BookOpen , Briefcase , LayoutGrid , UserCircle , ShieldAlert} from 'lucide-react'
 import PrepCheckList from '../components/PrepCheckList';
+import CompanyTracker from '../components/CompanyTracker';
 
 const Profile = ()=>{
   const {user} = useAuth();
@@ -101,7 +102,7 @@ const Profile = ()=>{
 
             {activeTab === 'experience' && <div className="text-gray-500 italic">Content Feed...</div>}
             {activeTab === 'prep' && isStudent && <PrepCheckList />}
-            {activeTab === 'companies' && isStudent && <div>Company Tracking Component...</div>}
+            {activeTab === 'companies' && isStudent && <CompanyTracker />}
           </div>
 
         </div>
