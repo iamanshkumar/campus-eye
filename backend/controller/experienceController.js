@@ -185,3 +185,26 @@ export const downvoteExperience = async(req,res)=>{
         })
     }
 }
+
+export const getMyExperiences = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const experiences = await Experience.find({ user: userId })
+            .populate('user', 'fullName username profilePic role')
+            .populate('company', 'name logo')
+            .sort({ createdAt: -1 }); 
+
+        return res.status(200).json({
+            success: true,
+            message: "Your experiences fetched successfully",
+            count: experiences.length,
+            data: experiences
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: `Fetching your experiences error: ${err.message}`
+        });
+    }
+};

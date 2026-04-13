@@ -4,6 +4,7 @@ import {Settings , BookOpen , Briefcase , LayoutGrid , UserCircle , ShieldAlert}
 import PrepCheckList from '../components/PrepCheckList';
 import CompanyTracker from '../components/CompanyTracker';
 import EditProfileModal from '../components/EditProfileModal';
+import MyExperiences from '../components/MyExperiences';
 
 const Profile = ()=>{
   const {user} = useAuth();
@@ -110,10 +111,7 @@ const Profile = ()=>{
 
             {activeTab === 'experience' && (
               <div className="text-center py-10">
-                <LayoutGrid size={48} className="mx-auto text-gray-200 mb-4" />
-                <p className="text-gray-500 italic">
-                  {isAdmin ? "Viewing system-wide feed..." : "You haven't posted any experiences yet."}
-                </p>
+                <MyExperiences />
               </div>
             )}
             
