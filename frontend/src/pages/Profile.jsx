@@ -3,22 +3,28 @@ import {useAuth} from '../context/AuthContext';
 import {Settings , BookOpen , Briefcase , LayoutGrid , UserCircle , ShieldAlert} from 'lucide-react'
 import PrepCheckList from '../components/PrepCheckList';
 import CompanyTracker from '../components/CompanyTracker';
+import EditProfileModal from '../components/EditProfileModal';
 
 const Profile = ()=>{
   const {user} = useAuth();
   const[activeTab , setActiveTab] = useState('experience');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const isStudent = user?.role==='student';
   const isAdmin = user?.role==='admin';
 
   return(
     <div className="w-full max-w-6xl mx-auto mt-6 px-4 pb-10">
+      <EditProfileModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
       <div className="grid grid-cols-12 gap-8">
 
         <div className="col-span-12 md:col-span-4 flex flex-col gap-6">
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col items-center text-center">
             <div className="relative w-48 h-48 rounded-full border-4 border-amber-100 p-1 mb-4 overflow-hidden bg-gray-50 flex items-center justify-center">
               {user?.profilePic ? (
-                <img src={user.profilePic} alt="Profile" className="w-full h-full object-cover" />
+                <img src={user.profilePic} alt="Profile" className="w-full h-full object-cover rounded-full" />
               ) : (
                 <UserCircle size={120} className="text-gray-300" />
               )}
@@ -65,8 +71,11 @@ const Profile = ()=>{
 
         <div className="col-span-12 md:col-span-8 flex flex-col gap-6">
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative">
-            <button className="absolute top-6 right-6 p-2 text-gray-400 hover:text-emerald-800 hover:bg-emerald-50 rounded-xl transition-all cursor-pointer">
-              <Settings size={22}/>
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="absolute top-6 right-6 p-2 text-gray-400 hover:text-emerald-800 hover:bg-emerald-50 rounded-xl transition-all cursor-pointer"
+            >
+              <Settings size={22} />
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -75,9 +84,8 @@ const Profile = ()=>{
                 <div className="space-y-2">
                   <p className="text-gray-700 flex justify-between border-b pb-1">
                     <span className="font-semibold">Role:</span>
-                    <span className={`px-2 py-0.5 rounded text-xs uppercase font-bold ${isAdmin ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>{user?.role}</span>
+                    <span className={`px-2 py-0.5 rounded text-xs uppercase font-bold ${isAdmin ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'}`}>{user?.role}</span>
                   </p>
-
                   <p className="text-gray-700"><span className="font-semibold">Email:</span> {user?.email}</p>
                 </div>
               </div>
@@ -86,9 +94,9 @@ const Profile = ()=>{
                 <div>
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Academic Details</p>
                   <div className="space-y-2">
-                    <p className="text-gray-700"><span className="font-semibold">Branch:</span> {user?.branch}</p>
-                    <p className="text-gray-700"><span className="font-semibold">Year:</span> {user?.year}th Year</p>
-                    <p className="text-gray-700"><span className="font-semibold">CGPA:</span> {user?.cgpa}</p>
+                    <p className="text-gray-700"><span className="font-semibold">Branch:</span> {user?.branch || "Not Specified"}</p>
+                    <p className="text-gray-700"><span className="font-semibold">Year:</span> {user?.year ? `${user.year}th Year` : "Not Specified"}</p>
+                    <p className="text-gray-700"><span className="font-semibold">CGPA:</span> {user?.cgpa || "N/A"}</p>
                   </div>
                 </div>
               )}
@@ -100,8 +108,17 @@ const Profile = ()=>{
               {activeTab === 'prep' ? 'Preparation Checklist' : activeTab === 'companies' ? 'Company Tracking' : (isAdmin ? 'Admin Dashboard' : 'My Posted Experiences')}
             </h3>
 
-            {activeTab === 'experience' && <div className="text-gray-500 italic">Content Feed...</div>}
+            {activeTab === 'experience' && (
+              <div className="text-center py-10">
+                <LayoutGrid size={48} className="mx-auto text-gray-200 mb-4" />
+                <p className="text-gray-500 italic">
+                  {isAdmin ? "Viewing system-wide feed..." : "You haven't posted any experiences yet."}
+                </p>
+              </div>
+            )}
+            
             {activeTab === 'prep' && isStudent && <PrepCheckList />}
+            
             {activeTab === 'companies' && isStudent && <CompanyTracker />}
           </div>
 

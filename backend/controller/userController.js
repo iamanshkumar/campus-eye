@@ -36,7 +36,6 @@ export const updateProfile = async(req,res)=>{
     try{
         const allowedFields = [
             "fullName",
-            "profilePic",
             "cgpa",
             "branch",
         ]
@@ -49,6 +48,10 @@ export const updateProfile = async(req,res)=>{
             }
         })
 
+        if(req.file){
+            updatedData.profilePic = req.file.path;
+        }
+
         if (Object.keys(updatedData).length === 0) {
             return res.status(400).json({
                 success: false,
@@ -58,7 +61,7 @@ export const updateProfile = async(req,res)=>{
 
         const updatedUser = await User.findByIdAndUpdate(
             req.user._id,
-            updatedData,
+            { $set: updatedData },
             { new: true, runValidators: true }
         ).select('-password');
 
