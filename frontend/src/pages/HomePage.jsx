@@ -4,11 +4,15 @@ import Timeline from './Timeline.jsx';
 import InterviewExperience from './InterviewExperience.jsx';
 import Profile from './Profile.jsx';
 
+
 const HomePage = () => {
   const [state , setState] = useState('timeline');
   return (
     <div className='flex flex-col items-center p-2.5 bg-amber-50 min-h-screen'>
-      <Navbar state={state} setState={setState}></Navbar>
+      <div className='flex justify-evenly w-full'>
+        <Navbar state={state} setState={setState}></Navbar>
+      </div>
+      
       {state==='timeline' ? <Timeline></Timeline> : state==='profile' ? <Profile></Profile> : <InterviewExperience></InterviewExperience>}
     </div>
   )

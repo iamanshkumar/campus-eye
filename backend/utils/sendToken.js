@@ -21,7 +21,8 @@ const sendToken = (user , res)=>{
             role: user.role,
             cgpa: user.cgpa,
             branch: user.branch,
-            year: user.year
+            year: user.year,
+            profilePic: user.profilePic
         }
     });
 }

@@ -1,5 +1,8 @@
 import React from 'react'
 import {motion} from 'framer-motion'
+import { LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({state , setState}) => {
     const tabs = [
@@ -7,6 +10,8 @@ const Navbar = ({state , setState}) => {
         {id : 'interview experience' , label : 'Interview Experience'},
         {id : 'profile' , label : 'Profile'}
     ]
+    const navigate = useNavigate();
+    const {logout} = useAuth()
   return (
     <div className='flex justify-evenly items-center p-6 bg-emerald-950 border border-emerald-800/50 rounded-4xl w-[80vw] shadow-xl'>
         {tabs.map((tab) => (
@@ -30,6 +35,16 @@ const Navbar = ({state , setState}) => {
             )}
           </div>
         ))}
+        <button 
+                onClick={() => {
+                    logout();
+                    navigate('/login');
+                }}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-white hover:bg-red-500/20 border border-emerald-500/20 hover:border-red-500/20 transition-all cursor-pointer group"
+            >
+                <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
+                <span className="hidden md:block">Sign Out</span>
+            </button>
     </div>
   )
 }
