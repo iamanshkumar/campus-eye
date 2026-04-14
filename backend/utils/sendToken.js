@@ -22,7 +22,8 @@ const sendToken = (user , res)=>{
             cgpa: user.cgpa,
             branch: user.branch,
             year: user.year,
-            profilePic: user.profilePic
+            profilePic: user.profilePic,
+            prepChecklist: user.prepChecklist
         }
     });
 }
