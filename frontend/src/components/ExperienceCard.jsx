@@ -65,18 +65,20 @@ const ExperienceCard = ({experience , onDelete}) => {
                 <h2 className='font-medium text-gray-700'>@{experience.user.username}</h2>
                 {experience.user?.role === 'admin' && <ShieldCheck size={14} className="text-blue-500" />}
             </div>
-            
-            <div className='flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-full'>
 
-                <img
-                    src={experience.company.logo}
-                    alt={experience.company.name}
-                    className="w-5 h-5 object-contain"
-                />
-                <span className="text-xs font-medium text-gray-700">
-                    {experience.company.name}
-                </span>
-
+            <div className='flex items-center gap-2'>
+                {experience.company && (
+                    <div className='flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-full'>
+                        <img
+                            src={experience.company.logo}
+                            alt={experience.company.name}
+                            className="w-5 h-5 object-contain"
+                        />
+                        <span className="text-xs font-medium text-gray-700">
+                            {experience.company.name}
+                        </span>
+                    </div>
+                )}
                 {(isOwner || isAdmin) && (
                     <button onClick={handleDelete} className="text-gray-400 hover:text-red-500 transition cursor-pointer p-1">
                         <Trash2 size={18} />
