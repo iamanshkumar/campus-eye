@@ -1,12 +1,17 @@
 import Company from "../models/companyModel.js";
 
 export const addCompany = async(req , res)=>{
-    const {name , logo , offeredPackage , location , description , visitingDate , status , devStack , eligibility } = req.body;
+    const {name , offeredPackage , location , description , visitingDate , status , devStack , eligibility } = req.body;
     if(!name || !offeredPackage || !location || location.length===0 || !description || !visitingDate || !status || !devStack || devStack.length===0 || !eligibility){
         return res.status(400).json({
             success : false,
             message : "Missing Details"
         });
+    }
+
+    let logo = "";
+    if (req.file) {
+        logo = req.file.path; 
     }
 
     try{
@@ -20,7 +25,7 @@ export const addCompany = async(req , res)=>{
 
         const company = new Company({
             name , 
-            logo : logo===null ? '' : logo,
+            logo,
             offeredPackage,
             location,
             description,
@@ -119,7 +124,6 @@ export const updateCompany = async(req , res)=>{
         const {id} = req.params;
         const allowedFields = [
             "name",
-            "logo",
             "offeredPackage",
             "location",
             "description",
@@ -137,11 +141,8 @@ export const updateCompany = async(req , res)=>{
             }
         })
 
-        if (Object.keys(updatedData).length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: "No fields provided for update"
-            });
+        if (req.file) {
+            updatedData.logo = req.file.path;
         }
 
         const updatedCompany = await Company.findByIdAndUpdate(
