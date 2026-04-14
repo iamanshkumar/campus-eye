@@ -118,22 +118,22 @@ The app will be available at `http://localhost:5173`.
 | POST | `/api/auth/register` | Register a new user | Public |
 | POST | `/api/auth/login` | Login | Public |
 | POST | `/api/auth/logout` | Logout | Public |
-| GET | `/api/companies` | Get all companies (with filters) | 🔒 |
-| POST | `/api/companies` | Add a company | 🔒 Admin |
-| PUT | `/api/companies/:id` | Update a company | 🔒 Admin |
+| GET | `/api/companies` | Get all companies (with filters) | Required |
+| POST | `/api/companies` | Add a company | Admin |
+| PUT | `/api/companies/:id` | Update a company | Admin |
 | GET | `/api/experiences` | Get all experiences | Public |
-| POST | `/api/experiences` | Post an experience | 🔒 |
-| DELETE | `/api/experiences/:id` | Delete an experience | 🔒 Owner/Admin |
-| PUT | `/api/experiences/:id/upvote` | Toggle upvote | 🔒 |
+| POST | `/api/experiences` | Post an experience | Required |
+| DELETE | `/api/experiences/:id` | Delete an experience | Owner / Admin |
+| PUT | `/api/experiences/:id/upvote` | Toggle upvote | Required |
 | GET | `/api/comments/:experienceId` | Get threaded comments | Public |
-| POST | `/api/comments` | Post a comment/reply | 🔒 |
-| DELETE | `/api/comments/:commentId` | Delete a comment | 🔒 Owner/Admin |
-| GET | `/api/status` | Get tracked companies | 🔒 |
-| POST | `/api/status` | Track a company | 🔒 |
-| PUT | `/api/status/:companyId` | Update tracking status | 🔒 |
-| DELETE | `/api/status/:companyId` | Remove tracked company | 🔒 |
-| PUT | `/api/user/checklist` | Update prep checklist | 🔒 |
-| PUT | `/api/user/profile` | Update profile | 🔒 |
+| POST | `/api/comments` | Post a comment/reply | Required |
+| DELETE | `/api/comments/:commentId` | Delete a comment | Owner / Admin |
+| GET | `/api/status` | Get tracked companies | Required |
+| POST | `/api/status` | Track a company | Required |
+| PUT | `/api/status/:companyId` | Update tracking status | Required |
+| DELETE | `/api/status/:companyId` | Remove tracked company | Required |
+| PUT | `/api/user/checklist` | Update prep checklist | Required |
+| PUT | `/api/user/profile` | Update profile | Required |
 
 ---
 
