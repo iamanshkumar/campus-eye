@@ -67,6 +67,7 @@ const ExperienceCard = ({experience , onDelete}) => {
             </div>
             
             <div className='flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-full'>
+
                 <img
                     src={experience.company.logo}
                     alt={experience.company.name}

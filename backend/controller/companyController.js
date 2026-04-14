@@ -54,6 +54,10 @@ export const addCompany = async(req , res)=>{
 export const getAllCompanies = async(req,res)=>{
     try{
         const filter ={};
+
+        if (req.query.name) {
+            filter.name = { $regex: req.query.name, $options: 'i' };
+        }
         
         if(req.query.status){
             filter.status = req.query.status;
@@ -74,8 +78,9 @@ export const getAllCompanies = async(req,res)=>{
         }
 
         if (req.query.devStack) {
+            const terms = req.query.devStack.split(",").map(t => t.trim()).filter(Boolean);
             filter.devStack = {
-                $in: req.query.devStack.split(",")
+                $elemMatch: { $in: terms.map(t => new RegExp(t, 'i')) }
             };
         }
 
