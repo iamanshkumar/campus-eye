@@ -6,7 +6,7 @@ import {useAuth} from '../context/AuthContext';
 
 const PrepCheckList = ()=>{
     const {user , updateUser} = useAuth();
-    const [checkList , setCheckList] = useState(user?.prepCheckList || {});
+    const [checkList , setCheckList] = useState(user?.prepChecklist || {});
     const [loadingKey , setLoadingKey] = useState(null);
 
     useEffect(() => {
