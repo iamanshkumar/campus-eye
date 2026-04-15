@@ -42,10 +42,10 @@ const LoginPage = () => {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-amber-50">
-            <div className="p-8 pb-2.5 bg-emerald-900 rounded-2xl shadow-xl">
+        <div className="flex min-h-screen items-center justify-center bg-amber-50 px-4">
+            <div className="p-6 md:p-8 pb-2.5 bg-emerald-900 rounded-2xl shadow-xl w-full max-w-sm">
                 <h2 className="text-2xl pb-3 text-amber-50 font-bold">{state==='Login'? "Welcome Back!" : "Join Campus Eye"}</h2>
-                <form className="flex flex-col gap-2.5 w-80" onSubmit={handleSubmit}>
+                <form className="flex flex-col gap-2.5 w-full" onSubmit={handleSubmit}>
                     {state === 'Register' ?
                         <div className='flex flex-col gap-2.5 c'>
                             <label className="text-amber-50 text-sm">Full Name</label>

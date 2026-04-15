@@ -8,12 +8,14 @@ import Profile from './Profile.jsx';
 const HomePage = () => {
   const [state , setState] = useState('timeline');
   return (
-    <div className='flex flex-col items-center p-2.5 bg-amber-50 min-h-screen'>
-      <div className='flex justify-evenly w-full'>
-        <Navbar state={state} setState={setState}></Navbar>
+    <div className='flex flex-col items-center px-3 py-3 md:p-4 bg-amber-50 min-h-screen'>
+      <div className='w-full max-w-5xl'>
+        <Navbar state={state} setState={setState} />
       </div>
-      
-      {state==='timeline' ? <Timeline></Timeline> : state==='profile' ? <Profile></Profile> : <InterviewExperience></InterviewExperience>}
+
+      <div className='w-full max-w-5xl mt-4'>
+        {state === 'timeline' ? <Timeline /> : state === 'profile' ? <Profile /> : <InterviewExperience />}
+      </div>
     </div>
   )
 }

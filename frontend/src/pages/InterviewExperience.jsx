@@ -32,10 +32,10 @@ const InterviewExperience = () => {
   }, []);
 
   return (
-    <div className='flex flex-col gap-3 mt-3 w-[60vw]'>
+    <div className='flex flex-col gap-3 mt-3 w-full'>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-emerald-900 text-white px-4 py-2 w-[10vw] rounded-xl cursor-pointer"
+        className="bg-emerald-900 text-white px-4 py-2 w-full sm:w-auto sm:self-start rounded-xl cursor-pointer"
       >
         Add Experience
       </button>
