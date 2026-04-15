@@ -87,15 +87,26 @@ export const deleteExperience = async(req,res)=>{
     const {id} = req.params;
     try{
         const experience = await Experience.findById(id);
-        const owner = experience.user;
 
-        const currentUser = req.user._id;
+        if (!experience) {
+            return res.status(404).json({
+                success: false,
+                message: "Experience not found"
+            });
+        }
 
-        if(currentUser.toString()!==owner.toString() && currentUser.role!=="admin"){
+        const ownerId = experience.user.toString();
+        const currentUserId = req.user._id.toString();
+        const currentUserRole = req.user.role;
+
+        const isOwner = currentUserId === ownerId;
+        const isAdmin = currentUserRole === "admin";
+
+        if (!isOwner && !isAdmin) {
             return res.status(403).json({
-                success : false,
-                message : 'Only owner can delete the experience'
-            })
+                success: false,
+                message: 'Access denied. Only the owner or an admin can delete this experience.'
+            });
         }
 
         await Experience.findByIdAndDelete(id);

@@ -117,37 +117,46 @@ export const deleteComment = async(req,res)=>{
             })
         }
 
-        const commentOwnerId = comment.user;
-        const userId = req.user._id;
-        const user = await User.findById(userId);
-        const postOwnerId = comment.experience.user;
+        const userId = req.user._id.toString();
+        const userRole = req.user.role;
 
-        if(commentOwnerId.toString()!==userId.toString() && postOwnerId.toString()!==userId.toString() && user.role!=="admin"){
+        const commentOwnerId = comment.user.toString();
+        const postOwnerId = comment.experience?.user?.toString();
+
+        const isCommentOwner = userId === commentOwnerId;
+        const isPostOwner = userId === postOwnerId;
+        const isAdmin = userRole === "admin";
+
+        if (!isCommentOwner && !isPostOwner && !isAdmin) {
             return res.status(403).json({
-                success : false,
-                message : "You are not authorised to delete the comment"
-            })
+                success: false,
+                message: "You are not authorized to delete this comment"
+            });
         }
 
-        const experienceId = comment.experience._id;
+        const experienceId = comment.experience?._id;
         await Comment.findByIdAndDelete(commentId);
 
-        if(comment.parentComment){
+        if (comment.parentComment) {
             const parentComment = await Comment.findById(comment.parentComment);
-            if(parentComment){
+            if (parentComment) {
                 parentComment.replies = parentComment.replies.filter(
-                    r => r.toString() !== commentId.toString()
+                    r => r.toString() !== commentId
                 );
                 await parentComment.save();
             }
         }
-        
-        const experience = await Experience.findById(experienceId);
-        experience.comments = experience.comments.filter(
-            c => c.toString() !== commentId.toString()
-        );
-        await experience.save();
 
+        if (experienceId) {
+            const experience = await Experience.findById(experienceId);
+            if (experience) {
+                experience.comments = experience.comments.filter(
+                    c => c.toString() !== commentId
+                );
+                await experience.save();
+            }
+        }
+        
         return res.status(200).json({
             success : true,
             message : "Comment deleted successfully",
