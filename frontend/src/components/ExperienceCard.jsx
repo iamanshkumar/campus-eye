@@ -1,6 +1,6 @@
 import React , {useState} from 'react'
 import {ArrowUp , ArrowDown , MessageCircle , Trash2 ,ShieldCheck} from 'lucide-react'
-import axios from 'axios';
+import api from '../utils/api';
 import { toast } from 'react-hot-toast';
 import CommentSection from './CommentSection';
 import { useAuth } from '../context/AuthContext';
@@ -26,7 +26,7 @@ const ExperienceCard = ({experience , onDelete}) => {
     const handleDelete = async () => {
         if (!window.confirm("Delete this interview experience permanently?")) return;
         try {
-            await axios.delete(`/api/experiences/${experience._id}`, { withCredentials: true });
+            await api.delete(`/api/experiences/${experience._id}`);
             toast.success("Experience deleted");
             if (onDelete) onDelete(experience._id);
         } catch (err) {
@@ -37,7 +37,7 @@ const ExperienceCard = ({experience , onDelete}) => {
     const handleUpvote = async () => {
         setUpvotes(prev => prev + 1);
         try {
-            const res = await axios.put(`/api/experiences/${experience._id}/upvote`, {}, { withCredentials: true });
+            const res = await api.put(`/api/experiences/${experience._id}/upvote`, {});
             setUpvotes(res.data.data.upvotes.length);
             setDownvotes(res.data.data.downvotes.length);
         } catch (err) {
@@ -49,7 +49,7 @@ const ExperienceCard = ({experience , onDelete}) => {
     const handleDownvote = async () => {
         setDownvotes(prev => prev + 1);
         try {
-            const res = await axios.put(`/api/experiences/${experience._id}/downvote`, {}, { withCredentials: true });
+            const res = await api.put(`/api/experiences/${experience._id}/downvote`, {});
             setUpvotes(res.data.data.upvotes.length);
             setDownvotes(res.data.data.downvotes.length);
         } catch (err) {

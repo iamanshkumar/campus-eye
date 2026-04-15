@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { Loader2, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ExperienceCard from './ExperienceCard';
@@ -10,7 +10,7 @@ const MyExperiences = () => {
 
     const fetchMyPosts = async () => {
         try {
-            const res = await axios.get('/api/experiences/me', { withCredentials: true });
+            const res = await api.get('/api/experiences/me');
             setPosts(res.data.data);
         } catch (err) {
             console.error(err);

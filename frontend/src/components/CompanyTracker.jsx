@@ -1,5 +1,5 @@
 import React , {useEffect , useState} from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 import {Trash2 , Search , Plus , Building2 , CheckCircle , Loader2} from 'lucide-react';
 
@@ -20,7 +20,7 @@ const CompanyTracker = ()=>{
 
     const fetchTracked = async()=>{
         try{
-            const res = await axios.get('/api/status' , {withCredentials : true});
+            const res = await api.get('/api/status');
             setTrackedCompanies(res.data.data);
         }catch(err){
             toast.error('Failed to load tracked companies')
@@ -42,7 +42,7 @@ const CompanyTracker = ()=>{
 
             setIsSearching(true);
             try{
-                const res = await axios.get(`/api/companies?name=${searchedTerm}`,{withCredentials : true});
+                const res = await api.get(`/api/companies?name=${searchedTerm}`);
                 const trackedIds = trackedCompanies.map(item=>item.company._id);
                 const filtered = res.data.data.filter(c=>!trackedIds.includes(c._id));
                 setSearchResult(filtered);
@@ -58,7 +58,7 @@ const CompanyTracker = ()=>{
 
     const handleAddCompany = async(companyId)=>{
         try{
-            const res = await axios.post('/api/status', { company: companyId }, { withCredentials: true });
+            const res = await api.post('/api/status', { company: companyId });
             if(res.data.success){
                 toast.success('Added to your target');
                 setSearchedTerm('');
@@ -72,7 +72,7 @@ const CompanyTracker = ()=>{
 
     const handleStatusChange = async (companyId, newStatus) => {
         try {
-            await axios.put(`/api/status/${companyId}`, { status: newStatus }, { withCredentials: true });
+            await api.put(`/api/status/${companyId}`, { status: newStatus });
             setTrackedCompanies(prev => prev.map(item => 
                 item.company._id === companyId ? { ...item, status: newStatus } : item
             ));
@@ -85,7 +85,7 @@ const CompanyTracker = ()=>{
     const handleRemove = async (companyId) => {
         if (!window.confirm("Remove this company from your dashboard?")) return;
         try {
-            await axios.delete(`/api/status/${companyId}`, { withCredentials: true });
+            await api.delete(`/api/status/${companyId}`);
             setTrackedCompanies(prev => prev.filter(item => item.company._id !== companyId));
             toast.success("Removed successfully");
         } catch (err) {

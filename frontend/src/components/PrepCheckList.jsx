@@ -1,5 +1,5 @@
 import React , {useState , useEffect} from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 import {CheckCircle2 , Circle} from 'lucide-react';
 import {useAuth} from '../context/AuthContext';
@@ -45,7 +45,7 @@ const PrepCheckList = ()=>{
     setLoadingKey(key);
 
     try{
-        const res = await axios.put('/api/user/checklist',{...updatedCheckList} , {withCredentials:true});
+        const res = await api.put('/api/user/checklist', { ...updatedCheckList });
 
         if(res.data.success){
             updateUser(res.data.data);   

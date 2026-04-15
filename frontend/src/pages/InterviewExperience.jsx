@@ -1,5 +1,5 @@
 import React , { useEffect, useState } from 'react'
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 import ExperienceCard from '../components/ExperienceCard';
 import AddExperienceModal from '../components/AddExperienceModal';
@@ -10,9 +10,7 @@ const InterviewExperience = () => {
 
   const fetchData = async () => {
     try {
-      const {data} = await axios.get(`/api/experiences`,{
-        withCredentials : true
-      });
+      const {data} = await api.get(`/api/experiences`);
       setExperiences(data.data);
     } catch(err) {
       console.log("Interview experiences fetching error : ", err);

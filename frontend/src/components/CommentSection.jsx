@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast'
 import CommentNode from './CommentNode';
 
@@ -13,7 +13,7 @@ const CommentSection = ({ experienceID }) => {
 
     const fetchComments = async () => {
         try {
-            const res = await axios.get(`/api/comments/${experienceID}`, { withCredentials: true });
+            const res = await api.get(`/api/comments/${experienceID}`);
             setComments(res.data.data);
         } catch (err) {
             console.log("Error in fetching comments", err);
@@ -29,9 +29,7 @@ const CommentSection = ({ experienceID }) => {
 
         setIsSubmitting(true);
         try{
-            const res = await axios.post(`/api/comments`,{experienceId: experienceID,description: newText,},
-                {withCredentials:true}
-            );
+            const res = await api.post(`/api/comments`, { experienceId: experienceID, description: newText });
 
             if(res.data.success){
                 toast.success("Comment posted successfully");

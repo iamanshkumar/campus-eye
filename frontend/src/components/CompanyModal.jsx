@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { X, Save, Plus, Trash2, Loader2 } from 'lucide-react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 
 const CompanyModal = ({ isOpen, onClose, companyToEdit, onRefresh }) => {
@@ -67,7 +67,7 @@ const CompanyModal = ({ isOpen, onClose, companyToEdit, onRefresh }) => {
             const url = isEditing ? `/api/companies/${companyToEdit._id}` : '/api/companies';
             const method = isEditing ? 'put' : 'post';
 
-            await axios[method](url, data, { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } });
+            await api[method](url, data, { headers: { 'Content-Type': 'multipart/form-data' } });
             toast.success(`Company ${isEditing ? 'updated' : 'added'}!`);
             onRefresh();
             onClose();

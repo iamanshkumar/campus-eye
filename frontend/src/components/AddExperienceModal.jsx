@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
-import axios from "axios";
+import api from "../utils/api";
 import toast from "react-hot-toast";
 import { CircleX } from "lucide-react";
 
@@ -12,9 +12,7 @@ const AddExperienceModal = ({ isOpen, onClose, onSuccess }) => {
 
   useEffect(() => {
     const fetchCompanies = async () => {
-      const { data } = await axios.get(
-        `/api/companies`,
-      {withCredentials : true});
+      const { data } = await api.get(`/api/companies`);
       setCompanies(data.data);
     };
 
@@ -24,11 +22,7 @@ const AddExperienceModal = ({ isOpen, onClose, onSuccess }) => {
   const handleAddingExperience = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        `/api/experiences`,
-        { description: experience, company },
-        { withCredentials: true },
-      );
+      const { data } = await api.post(`/api/experiences`, { description: experience, company });
 
       toast.success(data.message);
       onClose();

@@ -1,5 +1,5 @@
 import React , {useState , useRef , useEffect} from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 import {X , Save , Camera , UserCircle , Loader2} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -59,9 +59,7 @@ const EditProfileModal = ({isOpen , onClose})=>{
             if(selectedFile){
                 data.append('profilePic' , selectedFile);
             }
-            const res = await axios.put('/api/user/profile' , data , {withCredentials : true , headers: {
-                    'Content-Type': 'multipart/form-data',
-                }});
+            const res = await api.put('/api/user/profile', data, { headers: { 'Content-Type': 'multipart/form-data' } });
             if(res.data.success){
                 updateUser(res.data.data);
                 toast.success("Profile updated successfully");

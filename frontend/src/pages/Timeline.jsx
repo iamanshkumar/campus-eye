@@ -1,5 +1,5 @@
 import React, { useEffect, useState , useCallback } from 'react'
-import axios from 'axios'
+import api from '../utils/api'
 import toast from 'react-hot-toast';
 import CompanyCard from '../components/CompanyCard.jsx';
 import CompanyModal from '../components/CompanyModal.jsx';
@@ -31,9 +31,7 @@ const Timeline = () => {
             if (filters.eligibility) params.append('eligibility', filters.eligibility);
             if (filters.status) params.append('status', filters.status);
 
-            const { data } = await axios.get(`/api/companies?${params.toString()}`, { 
-                withCredentials: true 
-            });
+            const { data } = await api.get(`/api/companies?${params.toString()}`);
             setCompanies(data.data);
         } catch (err) {
             toast.error("Error fetching companies");

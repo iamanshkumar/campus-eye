@@ -1,5 +1,5 @@
 import React , {useState} from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import toast from 'react-hot-toast';
 import {ArrowUp , ArrowDown , MessageCircle , Trash2 , ShieldCheck} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -28,7 +28,7 @@ const CommentNode = ({comment ,experienceID , onDeleteTopLevel})=>{
     const handleDelete = async()=>{
         if (!window.confirm("Are you sure you want to delete this comment?")) return;
         try{
-            await axios.delete(`/api/comments/${comment._id}`, { withCredentials: true });
+            await api.delete(`/api/comments/${comment._id}`);
             toast.success("Comment deleted");
             if (onDeleteTopLevel) {
                 onDeleteTopLevel(comment._id);
@@ -45,12 +45,10 @@ const CommentNode = ({comment ,experienceID , onDeleteTopLevel})=>{
         }
         setIsSubmitting(true);
             try{
-                const res = await axios.post(`/api/comments`,{
-                    experienceId : experienceID,
-                    description : replyText,
-                    parentCommentId : comment._id
-                },{
-                    withCredentials : true
+                const res = await api.post(`/api/comments`, {
+                    experienceId: experienceID,
+                    description: replyText,
+                    parentCommentId: comment._id
                 });
 
                 if(res.data.success){
@@ -71,7 +69,7 @@ const CommentNode = ({comment ,experienceID , onDeleteTopLevel})=>{
     const handleUpvote = async()=>{
         setUpvotes(prev=>prev+1);
         try{
-            const res = await axios.put(`/api/comments/${comment._id}/upvote`, {}, { withCredentials: true });
+            const res = await api.put(`/api/comments/${comment._id}/upvote`, {});
             setUpvotes(res.data.data.upvotes.length);
             setDownvotes(res.data.data.downvotes.length);
         }catch(err){
@@ -83,7 +81,7 @@ const CommentNode = ({comment ,experienceID , onDeleteTopLevel})=>{
     const handleDownvote = async () => {
         setDownvotes(prev => prev + 1); 
         try {
-            const res = await axios.put(`/api/comments/${comment._id}/downvote`, {}, { withCredentials: true });
+            const res = await api.put(`/api/comments/${comment._id}/downvote`, {});
             setUpvotes(res.data.data.upvotes.length);
             setDownvotes(res.data.data.downvotes.length);
         } catch (err) {
