@@ -14,7 +14,8 @@ const EditProfileModal = ({isOpen , onClose})=>{
     const [formData , setFormData] = useState({
         fullName : user?.fullName || '',
         cgpa : user?.cgpa || '',
-        branch : user?.branch || ''    
+        branch : user?.branch || ''  ,
+        year : user?.year || ''  
     })
 
     useEffect(()=>{
@@ -53,6 +54,7 @@ const EditProfileModal = ({isOpen , onClose})=>{
             if(user?.role==='student'){
                 data.append('cgpa' , formData.cgpa);
                 data.append('branch' , formData.branch);
+                data.append('year' , formData.year);
             }
             
 
@@ -144,6 +146,17 @@ const EditProfileModal = ({isOpen , onClose})=>{
                                             required
                                             value={formData.branch}
                                             onChange={(e) => setFormData({...formData, branch: e.target.value})}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-400 uppercase mb-1 ml-1">Year</label>
+                                        <input 
+                                            type="text"
+                                            required
+                                            value={formData.year}
+                                            onChange={(e) => setFormData({...formData, year: e.target.value})}
                                             className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm"
                                         />
                                     </div>

@@ -38,6 +38,7 @@ export const updateProfile = async(req,res)=>{
             "fullName",
             "cgpa",
             "branch",
+            "year"
         ]
 
         const updatedData = {};

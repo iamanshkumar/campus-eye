@@ -96,7 +96,7 @@ const Profile = ()=>{
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Academic Details</p>
                   <div className="space-y-2">
                     <p className="text-gray-700"><span className="font-semibold">Branch:</span> {user?.branch || "Not Specified"}</p>
-                    <p className="text-gray-700"><span className="font-semibold">Year:</span> {user?.year ? `${user.year}th Year` : "Not Specified"}</p>
+                    <p className="text-gray-700"><span className="font-semibold">Year:</span> {user?.year ? `${user.year}${user.year===1 ? "st" : user.year===2 ? "nd" : user.year===3 ? "rd" : "th"} Year` : "Not Specified"}</p>
                     <p className="text-gray-700"><span className="font-semibold">CGPA:</span> {user?.cgpa || "N/A"}</p>
                   </div>
                 </div>

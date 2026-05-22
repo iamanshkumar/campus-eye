@@ -32,7 +32,7 @@ const LoginPage = () => {
                 toast.error("Invalid credentials");
                 console.log("Invalid credentials", err);
             } finally {
-                setIsLoading(false); // 3. Stop loading regardless of success/fail
+                setIsLoading(false);
             }
         } else {
             try {
