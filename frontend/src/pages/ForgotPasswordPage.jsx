@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Loader2, Mail, Lock, Eye, EyeOff, ArrowLeft, KeyRound, CheckCircle2 } from 'lucide-react';
 import api from '../utils/api';
+import { Helmet } from 'react-helmet-async';
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -118,6 +119,11 @@ const ForgotPasswordPage = () => {
   };
 
   return (
+    <>
+    <Helmet>
+        <title>Forgot Password | Campus Eye</title>
+        <meta name="description" content="Reset your campus eye password." />
+      </Helmet>
     <div className="flex min-h-screen items-center justify-center bg-amber-50 px-4">
       <div className="p-6 md:p-8 pb-6 bg-emerald-900 rounded-2xl shadow-xl w-full max-w-md transition-all duration-300">
         
@@ -317,6 +323,7 @@ const ForgotPasswordPage = () => {
         </AnimatePresence>
       </div>
     </div>
+    </>
   );
 };
 

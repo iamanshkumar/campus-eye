@@ -7,10 +7,12 @@ import LandingPage from './pages/LandingPage'
 import ProtectedRoute from './components/ProtectRoute'
 import { useAuth } from './context/AuthContext'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import {HelmetProvider} from 'react-helmet-async';
 
 const App = () => {
   const { user } = useAuth();
   return (
+    <HelmetProvider>
     <BrowserRouter>
       <Toaster position='bottom-right' />
       <Routes>
@@ -31,6 +33,7 @@ const App = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
+    </HelmetProvider>
   )
 }
 

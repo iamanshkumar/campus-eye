@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import ExperienceCard from '../components/ExperienceCard';
 import AddExperienceModal from '../components/AddExperienceModal';
 import { Loader2, FileText } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const InterviewExperience = () => {
   const [experiences, setExperiences] = useState([]);
@@ -32,6 +33,11 @@ const InterviewExperience = () => {
   }, []);
 
   return (
+    <>
+    <Helmet>
+        <title>Interview Experiences | Campus Eye</title>
+        <meta name="description" content="Read real interview experiences from students who cracked top companies." />
+      </Helmet>
     <div className='flex flex-col gap-3 mt-3 w-full'>
       <button
         onClick={() => setIsModalOpen(true)}
@@ -67,6 +73,7 @@ const InterviewExperience = () => {
         ))
       )}
     </div>
+    </>
   );
 };
 
