@@ -6,7 +6,8 @@ if(!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASS){
 
 const transporter = nodemailer.createTransport({
     service : 'gmail',
-    host : 'smtp.gmail.com',
+    host : 'smtp-relay.gmail.com',
+    family : 4,
     port : 587,
     secure : false,
     requireTLS : true,
