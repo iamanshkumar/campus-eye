@@ -1,5 +1,5 @@
+import 'dotenv/config';
 import express, { json } from 'express';
-import dotenv from 'dotenv';
 import connectDB from './config/db.js'
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/authRoutes.js';
@@ -10,7 +10,6 @@ import companyStatusRouter from './routes/companyStatusRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import cors from 'cors';
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;

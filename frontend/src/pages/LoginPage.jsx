@@ -13,7 +13,7 @@ const LoginPage = () => {
     const [year, setYear] = useState(1);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
+
     const [isLoading, setIsLoading] = useState(false);
 
     const { login, register } = useAuth();
@@ -22,7 +22,7 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        
+
         if (state === "Login") {
             try {
                 await login(email, password);
@@ -54,41 +54,41 @@ const LoginPage = () => {
                 <h2 className="text-2xl pb-3 text-amber-50 font-bold">
                     {state === 'Login' ? "Welcome Back!" : "Join Campus Eye"}
                 </h2>
-                
+
                 <form className="flex flex-col gap-2.5 w-full" onSubmit={handleSubmit}>
                     {state === 'Register' && (
                         <div className='flex flex-col gap-2.5'>
                             <label className="text-amber-50 text-sm font-medium">Full Name</label>
-                            <input 
+                            <input
                                 disabled={isLoading}
                                 type="text"
                                 placeholder="Enter your name"
                                 className="border rounded px-2.5 py-2 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50"
                                 value={fullName}
-                                onChange={(e) => setFullName(e.target.value)} 
+                                onChange={(e) => setFullName(e.target.value)}
                             />
 
                         </div>
                     )}
 
                     <label className="text-amber-50 text-sm font-medium">Email</label>
-                    <input 
+                    <input
                         disabled={isLoading}
                         type="text"
                         placeholder="Enter your email"
                         className="border rounded px-2.5 py-2 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)} 
+                        onChange={(e) => setEmail(e.target.value)}
                     />
 
                     <label className="text-amber-50 text-sm font-medium">Password</label>
-                    <input 
+                    <input
                         disabled={isLoading}
                         type="password"
                         placeholder="Enter your password"
                         className="border rounded px-2.5 py-2 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)} 
+                        onChange={(e) => setPassword(e.target.value)}
                     />
 
                     <button
@@ -114,10 +114,10 @@ const LoginPage = () => {
                 </form>
 
                 <div className="flex flex-col justify-center items-center p-6">
-                    <p className="text-emerald-100 text-sm hover:underline transition duration-500 cursor-pointer">Forgot password</p>
+                    <p className="text-emerald-100 text-sm hover:underline transition duration-500 cursor-pointer" onClick={() => navigate("/forgot-password")}>Forgot password</p>
                     <div className="h-[1px] w-full bg-emerald-800 my-1"></div>
-                    <div 
-                        className="text-emerald-100 text-sm hover:underline transition duration-500 cursor-pointer text-center" 
+                    <div
+                        className="text-emerald-100 text-sm hover:underline transition duration-500 cursor-pointer text-center"
                         onClick={() => {
                             if (!isLoading) {
                                 state === 'Login' ? setState('Register') : setState('Login');

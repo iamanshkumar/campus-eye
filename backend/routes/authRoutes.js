@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware.js';
-import { register , login , logout } from '../controller/authController.js';
+import { register , login , logout , forgetPassword , resetPassword } from '../controller/authController.js';
 
 const authRouter = express.Router();
 
@@ -14,5 +14,8 @@ authRouter.get("/profile" , protect , (req,res)=>{
 })
 
 authRouter.post("/logout" , protect , logout);
+
+authRouter.post("/forget-password" , forgetPassword);
+authRouter.post("/reset-password" , resetPassword);
 
 export default authRouter;
