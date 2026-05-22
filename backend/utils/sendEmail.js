@@ -5,9 +5,14 @@ if(!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASS){
 }
 
 const transporter = nodemailer.createTransport({
-    host : 'smtp.gmail.com',
+    host : '64.233.184.108',
     family : 4,
+    secure:false,
     port : 587,
+    tls: {
+        servername: 'smtp.gmail.com',
+        rejectUnauthorized: false
+    },
     auth : {
         user : process.env.GMAIL_USER,
         pass : process.env.GMAIL_APP_PASS
