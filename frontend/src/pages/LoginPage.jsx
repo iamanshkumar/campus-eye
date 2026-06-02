@@ -68,6 +68,61 @@ const LoginPage = () => {
                                 onChange={(e) => setFullName(e.target.value)}
                             />
 
+                            <label className="text-amber-50 text-sm font-medium">Username</label>
+                            <input
+                                disabled={isLoading}
+                                type="text"
+                                placeholder="Enter a unique username"
+                                className="border rounded px-2.5 py-2 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50"
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                            />
+
+                            <div className="flex gap-2 w-full">
+                                <div className="flex flex-col gap-1 w-1/3">
+                                    <label className="text-amber-50 text-xs font-medium">Branch</label>
+                                    <select
+                                        disabled={isLoading}
+                                        className="border rounded px-2 py-2 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50"
+                                        value={selectedBranch}
+                                        onChange={(e) => setSelectedBranch(e.target.value)}
+                                    >
+                                        <option value="CSE">CSE</option>
+                                        <option value="IT">IT</option>
+                                        <option value="ECE">ECE</option>
+                                        <option value="MECH">MECH</option>
+                                        <option value="CIVIL">CIVIL</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col gap-1 w-1/3">
+                                    <label className="text-amber-50 text-xs font-medium">Year</label>
+                                    <select
+                                        disabled={isLoading}
+                                        className="border rounded px-2 py-2 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50"
+                                        value={year}
+                                        onChange={(e) => setYear(Number(e.target.value))}
+                                    >
+                                        <option value={1}>1st</option>
+                                        <option value={2}>2nd</option>
+                                        <option value={3}>3rd</option>
+                                        <option value={4}>4th</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col gap-1 w-1/3">
+                                    <label className="text-amber-50 text-xs font-medium">CGPA</label>
+                                    <input
+                                        disabled={isLoading}
+                                        type="number"
+                                        step="0.1"
+                                        min="0"
+                                        max="10"
+                                        placeholder="CGPA"
+                                        className="border rounded px-2 py-2 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50 w-full"
+                                        value={cgpa}
+                                        onChange={(e) => setCgpa(Number(e.target.value))}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     )}
 
