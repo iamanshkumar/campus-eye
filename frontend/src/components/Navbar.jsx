@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {motion} from 'framer-motion'
-import { LogOut, Bell } from 'lucide-react';
+import { LogOut, Bell, Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import Notifications from './Notifications.jsx';
@@ -14,13 +14,21 @@ const Navbar = ({state , setState}) => {
     const navigate = useNavigate();
     const {logout, user} = useAuth()
     const [showNotifications, setShowNotifications] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     if (user?.role === 'admin' && !tabs.find(t => t.id === 'admin_panel')) {
         tabs.push({id : 'admin_panel' , label : 'Admin Panel'});
     }
   return (
-    <div className='flex justify-between items-center px-4 py-3 md:px-6 md:py-4 bg-emerald-950 border border-emerald-800/50 rounded-2xl md:rounded-4xl w-full shadow-xl gap-2'>
-        <div className="flex items-center gap-1 md:gap-2 overflow-x-auto">
+    <div className='relative flex justify-between items-center px-4 py-3 md:px-6 md:py-4 bg-emerald-950 border border-emerald-800/50 rounded-2xl md:rounded-4xl w-full shadow-xl gap-2'>
+        <button 
+          className="md:hidden p-2 text-emerald-200 hover:text-white cursor-pointer"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        <div className="hidden md:flex items-center gap-2">
           {tabs.map((tab) => (
             <div
               key={tab.id}
@@ -66,6 +74,22 @@ const Navbar = ({state , setState}) => {
             <span className="hidden md:block text-sm">Sign Out</span>
             </button>
         </div>
+
+        {isMenuOpen && (
+          <div className="absolute top-[calc(100%+0.5rem)] left-0 w-full bg-emerald-950 border border-emerald-800/50 rounded-2xl shadow-xl flex flex-col p-2 z-50 md:hidden">
+            {tabs.map((tab) => (
+              <div
+                key={tab.id}
+                onClick={() => { setState(tab.id); setIsMenuOpen(false); }}
+                className={`px-4 py-3 text-sm font-medium cursor-pointer rounded-xl transition-colors ${
+                  state === tab.id ? 'bg-white/15 text-white' : 'text-emerald-200/60 hover:text-emerald-100 hover:bg-white/5'
+                }`}
+              >
+                {tab.label}
+              </div>
+            ))}
+          </div>
+        )}
     </div>
   )
 }
