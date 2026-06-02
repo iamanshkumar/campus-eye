@@ -8,6 +8,7 @@ import experienceRouter from './routes/experienceRoutes.js';
 import commentRouter from "./routes/commentRoutes.js";
 import companyStatusRouter from './routes/companyStatusRoutes.js';
 import userRouter from './routes/userRoutes.js';
+import notificationRouter from "./routes/notificationRoutes.js";
 import cors from 'cors';
 
 
@@ -32,6 +33,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/companies", companyRouter);
 app.use("/api/experiences", experienceRouter);
 app.use("/api/comments", commentRouter);
+app.use("/api/notifications", notificationRouter);
 app.use("/api/status", companyStatusRouter);
 app.use("/api/user", userRouter);
 

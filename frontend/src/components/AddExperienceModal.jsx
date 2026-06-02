@@ -7,6 +7,13 @@ import { CircleX } from "lucide-react";
 const AddExperienceModal = ({ isOpen, onClose, onSuccess }) => {
   const { user } = useAuth();
   const [company, setCompany] = useState("");
+  const [unlistedCompanyName, setUnlistedCompanyName] = useState("");
+  const [unlistedCompanyDetails, setUnlistedCompanyDetails] = useState({
+    offeredPackage: '',
+    eligibility: '',
+    location: '',
+    devStack: ''
+  });
   const [experience, setExperience] = useState("");
   const [companies, setCompanies] = useState([]);
 
@@ -22,7 +29,22 @@ const AddExperienceModal = ({ isOpen, onClose, onSuccess }) => {
   const handleAddingExperience = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await api.post(`/api/experiences`, { description: experience, company });
+      const payload = {
+        description: experience,
+      };
+
+      if (company === "other") {
+        payload.unlistedCompanyName = unlistedCompanyName;
+        payload.unlistedCompanyDetails = {
+          ...unlistedCompanyDetails,
+          location: unlistedCompanyDetails.location.split(',').map(l => l.trim()),
+          devStack: unlistedCompanyDetails.devStack.split(',').map(d => d.trim()),
+        };
+      } else {
+        payload.company = company;
+      }
+
+      const { data } = await api.post(`/api/experiences`, payload);
 
       toast.success(data.message);
       onClose();
@@ -70,7 +92,57 @@ const AddExperienceModal = ({ isOpen, onClose, onSuccess }) => {
                 {c.name}
               </option>
             ))}
+            <option value="other">Other (Unlisted Company)</option>
           </select>
+
+          {company === "other" && (
+            <div className="flex flex-col gap-3 p-3 bg-emerald-50 rounded border border-emerald-100">
+              <p className="text-xs text-emerald-800 font-semibold mb-1">Please provide some details about this company:</p>
+              <input
+                type="text"
+                placeholder="Company Name"
+                value={unlistedCompanyName}
+                onChange={(e) => setUnlistedCompanyName(e.target.value)}
+                className="border p-2 rounded bg-white"
+                required
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="number"
+                  placeholder="Offered Package (LPA)"
+                  value={unlistedCompanyDetails.offeredPackage}
+                  onChange={(e) => setUnlistedCompanyDetails({...unlistedCompanyDetails, offeredPackage: e.target.value})}
+                  className="border p-2 rounded bg-white w-full"
+                  required
+                />
+                <input
+                  type="number"
+                  step="0.1"
+                  placeholder="Eligibility (CGPA)"
+                  value={unlistedCompanyDetails.eligibility}
+                  onChange={(e) => setUnlistedCompanyDetails({...unlistedCompanyDetails, eligibility: e.target.value})}
+                  className="border p-2 rounded bg-white w-full"
+                  required
+                />
+              </div>
+              <input
+                type="text"
+                placeholder="Locations (comma separated)"
+                value={unlistedCompanyDetails.location}
+                onChange={(e) => setUnlistedCompanyDetails({...unlistedCompanyDetails, location: e.target.value})}
+                className="border p-2 rounded bg-white"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Dev Stack (comma separated, e.g. React, Node.js)"
+                value={unlistedCompanyDetails.devStack}
+                onChange={(e) => setUnlistedCompanyDetails({...unlistedCompanyDetails, devStack: e.target.value})}
+                className="border p-2 rounded bg-white"
+                required
+              />
+            </div>
+          )}
 
           <button
             type="submit"

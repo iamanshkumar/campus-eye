@@ -1,7 +1,9 @@
-import Experience from "../models/experienceModel.js"
+import Experience from "../models/experienceModel.js";
+import Company from "../models/companyModel.js";
+import Notification from "../models/notificationModel.js";
 
 export const addExpereience = async(req , res)=>{
-    const {description , company} = req.body;
+    const {description , company, unlistedCompanyName, unlistedCompanyDetails} = req.body;
     const userId = req.user._id;
     try{
         if(!description){
@@ -11,10 +13,23 @@ export const addExpereience = async(req , res)=>{
             })
         }
 
+        const isUnlisted = !company && unlistedCompanyName;
+
+        if (isUnlisted) {
+            if (!unlistedCompanyDetails || !unlistedCompanyDetails.offeredPackage || !unlistedCompanyDetails.eligibility || !unlistedCompanyDetails.location || !unlistedCompanyDetails.devStack) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Company details (package, eligibility, locations, dev stack) are required for unlisted companies."
+                });
+            }
+        }
 
         const experience = new Experience({
             description , 
-            company : company===null ? null : company,
+            company : isUnlisted ? null : company,
+            unlistedCompanyName: isUnlisted ? unlistedCompanyName : undefined,
+            unlistedCompanyDetails: isUnlisted ? unlistedCompanyDetails : undefined,
+            status: isUnlisted ? 'pending' : 'approved',
             user : userId
         })
 
@@ -36,7 +51,7 @@ export const addExpereience = async(req , res)=>{
 
 export const getAllExperience = async(req,res)=>{
     try{
-        const filter = {}
+        const filter = { status: 'approved' }
 
         if(req.query.company){
             filter.company = req.query.company;
@@ -217,5 +232,105 @@ export const getMyExperiences = async (req, res) => {
             success: false,
             message: `Fetching your experiences error: ${err.message}`
         });
+    }
+};
+
+export const getExperiencesByStatus = async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+        
+        const { status } = req.query;
+        const filter = status ? { status } : { status: { $ne: 'approved' } };
+
+        const experiences = await Experience.find(filter)
+            .populate('user', "fullName username")
+            .populate('company', 'name logo')
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            message: "Experiences fetched successfully",
+            data: experiences
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: `Error: ${err.message}` });
+    }
+};
+
+export const approveExperience = async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+
+        const { id } = req.params;
+        const { name, offeredPackage, location, description, visitingDate, status: companyStatus, devStack, eligibility } = req.body;
+
+        const experience = await Experience.findById(id);
+        if (!experience) return res.status(404).json({ success: false, message: 'Experience not found' });
+
+        if (experience.status === 'approved') {
+            return res.status(400).json({ success: false, message: 'Already approved' });
+        }
+
+        let companyLogo = "";
+        if (req.file) {
+            companyLogo = req.file.path;
+        }
+
+        const company = new Company({
+            name,
+            logo: companyLogo,
+            offeredPackage,
+            location,
+            description,
+            visitingDate,
+            status: companyStatus || 'visited',
+            devStack,
+            eligibility
+        });
+
+        await company.save();
+
+        experience.company = company._id;
+        experience.status = 'approved';
+        await experience.save();
+
+        await Notification.create({
+            user: experience.user,
+            message: `Your interview experience for ${experience.unlistedCompanyName} has been approved and the company is now listed!`,
+            type: 'success'
+        });
+
+        return res.status(200).json({ success: true, message: 'Experience approved and company added', data: experience });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: `Error: ${err.message}` });
+    }
+};
+
+export const rejectExperience = async (req, res) => {
+    try {
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+
+        const { id } = req.params;
+        const experience = await Experience.findById(id);
+        if (!experience) return res.status(404).json({ success: false, message: 'Experience not found' });
+
+        experience.status = 'rejected';
+        await experience.save();
+
+        await Notification.create({
+            user: experience.user,
+            message: `Your interview experience for ${experience.unlistedCompanyName || 'the unlisted company'} has been rejected.`,
+            type: 'error'
+        });
+
+        return res.status(200).json({ success: true, message: 'Experience rejected', data: experience });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: `Error: ${err.message}` });
     }
 };

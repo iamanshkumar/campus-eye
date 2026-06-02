@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {motion} from 'framer-motion'
-import { LogOut } from 'lucide-react';
+import { LogOut, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import Notifications from './Notifications.jsx';
 
 const Navbar = ({state , setState}) => {
     const tabs = [
@@ -11,7 +12,12 @@ const Navbar = ({state , setState}) => {
         {id : 'profile' , label : 'Profile'}
     ]
     const navigate = useNavigate();
-    const {logout} = useAuth()
+    const {logout, user} = useAuth()
+    const [showNotifications, setShowNotifications] = useState(false);
+
+    if (user?.role === 'admin' && !tabs.find(t => t.id === 'admin_panel')) {
+        tabs.push({id : 'admin_panel' , label : 'Admin Panel'});
+    }
   return (
     <div className='flex justify-between items-center px-4 py-3 md:px-6 md:py-4 bg-emerald-950 border border-emerald-800/50 rounded-2xl md:rounded-4xl w-full shadow-xl gap-2'>
         <div className="flex items-center gap-1 md:gap-2 overflow-x-auto">
@@ -34,16 +40,32 @@ const Navbar = ({state , setState}) => {
             </div>
           ))}
         </div>
-        <button
-          onClick={() => {
-            logout();
-            navigate('/login');
-          }}
-          className="flex items-center gap-2 px-3 py-2 md:px-5 md:py-2.5 rounded-2xl font-bold text-white hover:bg-red-500/20 border border-emerald-500/20 hover:border-red-500/20 transition-all cursor-pointer group shrink-0"
-        >
-          <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="hidden md:block text-sm">Sign Out</span>
-        </button>
+        <div className="flex items-center gap-2">
+            <div className="relative">
+                <button
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className="p-2 text-emerald-200 hover:text-white transition-colors cursor-pointer"
+                >
+                    <Bell size={20} />
+                </button>
+                {showNotifications && (
+                    <div className="absolute right-0 top-full mt-2 w-80 z-50">
+                        <Notifications onClose={() => setShowNotifications(false)} />
+                    </div>
+                )}
+            </div>
+
+            <button
+            onClick={() => {
+                logout();
+                navigate('/login');
+            }}
+            className="flex items-center gap-2 px-3 py-2 md:px-5 md:py-2.5 rounded-2xl font-bold text-white hover:bg-red-500/20 border border-emerald-500/20 hover:border-red-500/20 transition-all cursor-pointer group shrink-0"
+            >
+            <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" />
+            <span className="hidden md:block text-sm">Sign Out</span>
+            </button>
+        </div>
     </div>
   )
 }

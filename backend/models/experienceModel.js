@@ -25,7 +25,22 @@ const experienceSchema = new mongoose.Schema({
     comments : [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "Comment"
-    }]
+    }],
+    unlistedCompanyName: {
+        type: String,
+        required: function() { return !this.company; }
+    },
+    unlistedCompanyDetails: {
+        offeredPackage: Number,
+        eligibility: Number,
+        location: [String],
+        devStack: [String]
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'approved'
+    }
 },
 {timestamps : true}
 );

@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar.jsx'
 import Timeline from './Timeline.jsx';
 import InterviewExperience from './InterviewExperience.jsx';
 import Profile from './Profile.jsx';
+import AdminPanel from './AdminPanel.jsx';
 
 
 const HomePage = () => {
@@ -14,7 +15,10 @@ const HomePage = () => {
       </div>
 
       <div className='w-full max-w-5xl mt-4'>
-        {state === 'timeline' ? <Timeline /> : state === 'profile' ? <Profile /> : <InterviewExperience />}
+        {state === 'timeline' ? <Timeline /> : 
+         state === 'profile' ? <Profile /> : 
+         state === 'admin_panel' ? <AdminPanel /> : 
+         <InterviewExperience />}
       </div>
     </div>
   )
