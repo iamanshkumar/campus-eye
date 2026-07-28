@@ -136,25 +136,18 @@ export const deleteComment = async(req,res)=>{
 
         const experienceId = comment.experience?._id;
         await Comment.findByIdAndDelete(commentId);
+        await Comment.deleteMany({ parentComment: commentId });
 
         if (comment.parentComment) {
-            const parentComment = await Comment.findById(comment.parentComment);
-            if (parentComment) {
-                parentComment.replies = parentComment.replies.filter(
-                    r => r.toString() !== commentId
-                );
-                await parentComment.save();
-            }
+            await Comment.findByIdAndUpdate(comment.parentComment, {
+                $pull: { replies: commentId }
+            });
         }
 
         if (experienceId) {
-            const experience = await Experience.findById(experienceId);
-            if (experience) {
-                experience.comments = experience.comments.filter(
-                    c => c.toString() !== commentId
-                );
-                await experience.save();
-            }
+            await Experience.findByIdAndUpdate(experienceId, {
+                $pull: { comments: commentId }
+            });
         }
         
         return res.status(200).json({
@@ -183,26 +176,34 @@ export const upvoteComment = async(req,res)=>{
         }
 
         const hasUpvoted = comment.upvotes.includes(userId);
-        const hasDownvoted = comment.downvotes.includes(userId);
 
+        let updatedComment;
         if(hasUpvoted){
-            comment.upvotes.pull(userId);
-        }else{
-            comment.upvotes.push(userId);
-            if (hasDownvoted) comment.downvotes.pull(userId);
+            updatedComment = await Comment.findByIdAndUpdate(
+                id,
+                { $pull: { upvotes: userId } },
+                { new: true }
+            ).populate("user" , "fullName username");
+        } else {
+            updatedComment = await Comment.findByIdAndUpdate(
+                id,
+                { 
+                    $addToSet: { upvotes: userId },
+                    $pull: { downvotes: userId }
+                },
+                { new: true }
+            ).populate("user" , "fullName username");
         }
-    
-        await comment.save();
     
         return res.status(200).json({
             success : true,
             message : "Comment upvote toggled successfully",
-            data : comment
+            data : updatedComment
         })
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Error in upvoting comment ${err}`
+            message : `Error in upvoting comment ${err.message || err}`
         })
     }
 }
@@ -219,27 +220,35 @@ export const downvoteComment = async(req,res)=>{
             })
         }
 
-        const hasUpvoted = comment.upvotes.includes(userId);
         const hasDownvoted = comment.downvotes.includes(userId);
 
-        if (hasDownvoted) {
-            comment.downvotes.pull(userId);
+        let updatedComment;
+        if(hasDownvoted){
+            updatedComment = await Comment.findByIdAndUpdate(
+                id,
+                { $pull: { downvotes: userId } },
+                { new: true }
+            ).populate("user" , "fullName username");
         } else {
-            comment.downvotes.push(userId);
-            if (hasUpvoted) comment.upvotes.pull(userId);
+            updatedComment = await Comment.findByIdAndUpdate(
+                id,
+                { 
+                    $addToSet: { downvotes: userId },
+                    $pull: { upvotes: userId }
+                },
+                { new: true }
+            ).populate("user" , "fullName username");
         }
-
-        await comment.save();
     
         return res.status(200).json({
             success : true,
             message : "Comment downvote toggled successfully",
-            data : comment
+            data : updatedComment
         })
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Error in downvoting comment ${err}`
+            message : `Error in downvoting comment ${err.message || err}`
         })
     }
 }

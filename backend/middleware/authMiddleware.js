@@ -7,8 +7,8 @@ export const protect = async(req , res , next)=>{
 
         if(!token){
             return res.status(401).json({
-                success : 'false',
-                message : "Not authorised"
+                success : false,
+                message : "Not authorized"
             })
         }
 

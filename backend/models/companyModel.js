@@ -40,6 +40,10 @@ const companySchema = new mongoose.Schema({
     }
 });
 
+companySchema.index({ status: 1, visitingDate: 1 });
+companySchema.index({ offeredPackage: 1 });
+companySchema.index({ eligibility: 1 });
+
 const Company = mongoose.model("Company" , companySchema);
 
 export default Company;

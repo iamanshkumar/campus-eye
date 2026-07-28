@@ -5,7 +5,8 @@ import CompanyCard from '../components/CompanyCard.jsx';
 import CompanyModal from '../components/CompanyModal.jsx';
 import FilterBar from '../components/FilterBar.jsx';
 import {useAuth} from '../context/AuthContext.jsx';
-import { Plus ,Loader2 , Inbox } from 'lucide-react';
+import { CompanyCardSkeleton } from '../components/SkeletonLoaders.jsx';
+import { Plus , Inbox } from 'lucide-react';
 
 const Timeline = () => {
     const {user} = useAuth();
@@ -78,9 +79,10 @@ const Timeline = () => {
             <FilterBar filters={filters} setFilters={setFilters} onClear={handleClear} />
 
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 text-emerald-800/40">
-                    <Loader2 className="animate-spin mb-2" size={40} />
-                    <p className="font-bold">Updating Timeline...</p>
+                <div className="flex flex-col gap-6 mt-3">
+                    <CompanyCardSkeleton />
+                    <CompanyCardSkeleton />
+                    <CompanyCardSkeleton />
                 </div>
             ) : companies.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 bg-white/50 rounded-4xl border-2 border-dashed border-emerald-100">

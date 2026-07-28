@@ -1,8 +1,9 @@
 import Experience from "../models/experienceModel.js";
 import Company from "../models/companyModel.js";
 import Notification from "../models/notificationModel.js";
+import Comment from "../models/commentModel.js";
 
-export const addExpereience = async(req , res)=>{
+export const addExperience = async(req , res)=>{
     const {description , company, unlistedCompanyName, unlistedCompanyDetails} = req.body;
     const userId = req.user._id;
     try{
@@ -57,18 +58,31 @@ export const getAllExperience = async(req,res)=>{
             filter.company = req.query.company;
         }
 
-        const experiences = await Experience.find(filter).populate('user' , "fullName username").populate('company','name logo').populate('comments');
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const totalCount = await Experience.countDocuments(filter);
+        const experiences = await Experience.find(filter)
+            .populate('user' , "fullName username")
+            .populate('company','name logo')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
         return res.status(200).json({
             success : true,
             message : "All experiences fetched successfully",
             count : experiences.length,
+            totalCount,
+            totalPages: Math.ceil(totalCount / limit),
+            currentPage: page,
             data : experiences
         })
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Fetching experiences error : ${err}`
+            message : `Fetching experiences error : ${err.message || err}`
         })
     }
 }
@@ -125,6 +139,7 @@ export const deleteExperience = async(req,res)=>{
         }
 
         await Experience.findByIdAndDelete(id);
+        await Comment.deleteMany({ experience: id });
 
         return res.status(200).json({
             success : true,
@@ -134,7 +149,7 @@ export const deleteExperience = async(req,res)=>{
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Experience deletion error : ${err}`
+            message : `Experience deletion error : ${err.message || err}`
         })
     }
 }
@@ -152,26 +167,34 @@ export const upvoteExperience = async(req,res)=>{
         }
 
         const hasUpvoted = experience.upvotes.includes(userId);
-        const hasDownvoted = experience.downvotes.includes(userId);
 
+        let updatedExperience;
         if(hasUpvoted){
-            experience.upvotes.pull(userId);
+            updatedExperience = await Experience.findByIdAndUpdate(
+                id,
+                { $pull: { upvotes: userId } },
+                { new: true }
+            ).populate('user', 'fullName username').populate('company', 'name logo');
         } else {
-            experience.upvotes.push(userId);
-            if(hasDownvoted) experience.downvotes.pull(userId);
+            updatedExperience = await Experience.findByIdAndUpdate(
+                id,
+                { 
+                    $addToSet: { upvotes: userId },
+                    $pull: { downvotes: userId }
+                },
+                { new: true }
+            ).populate('user', 'fullName username').populate('company', 'name logo');
         }
-
-        await experience.save();
 
         return res.status(200).json({
             success : true,
             message : "Experience upvoted successfully",
-            data : experience
+            data : updatedExperience
         })
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Error in upvoting experience ${err}`
+            message : `Error in upvoting experience: ${err.message || err}`
         })
     }
 }
@@ -188,26 +211,35 @@ export const downvoteExperience = async(req,res)=>{
             })
         }
 
-        const hasUpvoted = experience.upvotes.includes(userId);
         const hasDownvoted = experience.downvotes.includes(userId);
 
+        let updatedExperience;
         if(hasDownvoted){
-            experience.downvotes.pull(userId);
+            updatedExperience = await Experience.findByIdAndUpdate(
+                id,
+                { $pull: { downvotes: userId } },
+                { new: true }
+            ).populate('user', 'fullName username').populate('company', 'name logo');
         } else {
-            experience.downvotes.push(userId);
-            if(hasUpvoted) experience.upvotes.pull(userId);
+            updatedExperience = await Experience.findByIdAndUpdate(
+                id,
+                { 
+                    $addToSet: { downvotes: userId },
+                    $pull: { upvotes: userId }
+                },
+                { new: true }
+            ).populate('user', 'fullName username').populate('company', 'name logo');
         }
 
-        await experience.save();
         return res.status(200).json({
             success : true,
             message : "Experience downvoted successfully",
-            data : experience
+            data : updatedExperience
         })
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Error in downvoting experience ${err}`
+            message : `Error in downvoting experience: ${err.message || err}`
         })
     }
 }

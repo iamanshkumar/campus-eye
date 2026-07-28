@@ -14,14 +14,17 @@ export const register = async(req , res)=>{
         })
     }
     try{
+        const normalizedEmail = email.toLowerCase().trim();
+        const normalizedUsername = username.trim();
+
         const existingUser = await User.findOne({
-            $or: [{ email }, { username }]
+            $or: [{ email: normalizedEmail }, { username: normalizedUsername }]
         });
 
         if(existingUser){
             return res.status(409).json({
                 success : false,
-                message : existingUser.email === email 
+                message : existingUser.email === normalizedEmail 
                 ? "Email already registered" 
                 : "Username already taken"
             });
@@ -29,9 +32,9 @@ export const register = async(req , res)=>{
 
         const hashedPassword = await bcrypt.hash(password , 10);
         const user = new User({
-            fullName , 
-            username , 
-            email , 
+            fullName: fullName.trim() , 
+            username: normalizedUsername , 
+            email: normalizedEmail , 
             password : hashedPassword,
             cgpa,
             branch , 
@@ -45,7 +48,7 @@ export const register = async(req , res)=>{
     }catch(err){
         return res.status(500).json({
             success : false, 
-            message : `Registeration error : ${err}`
+            message : `Registration error : ${err.message || err}`
         });
     }
 }
@@ -60,11 +63,12 @@ export const login = async(req , res)=>{
     }
 
     try{
-        const user = await User.findOne({email});
+        const normalizedEmail = email.toLowerCase().trim();
+        const user = await User.findOne({email: normalizedEmail});
         if(!user){
             return res.status(404).json({
                 success : false,
-                message : "User with entered email doesn't exists"
+                message : "User with entered email doesn't exist"
             });
         }
 
@@ -81,7 +85,7 @@ export const login = async(req , res)=>{
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Login error : ${err}`
+            message : `Login error : ${err.message || err}`
         });
     }
 }

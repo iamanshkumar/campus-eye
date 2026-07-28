@@ -78,7 +78,7 @@ const AdminPanel = () => {
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-bold text-lg text-emerald-950">
-                    {exp.unlistedCompanyName || 'Unknown Company'}
+                    {exp.company?.name || exp.unlistedCompanyName || 'Unknown Company'}
                   </h3>
                   <p className="text-xs text-gray-500">Submitted by: {exp.user?.fullName} (@{exp.user?.username})</p>
                   <p className="text-xs text-gray-400 mt-1">{new Date(exp.createdAt).toLocaleDateString()}</p>

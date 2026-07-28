@@ -41,9 +41,11 @@ const experienceSchema = new mongoose.Schema({
         enum: ['pending', 'approved', 'rejected'],
         default: 'approved'
     }
-},
-{timestamps : true}
-);
+}, { timestamps : true });
+
+experienceSchema.index({ status: 1, createdAt: -1 });
+experienceSchema.index({ company: 1, status: 1 });
+experienceSchema.index({ user: 1, createdAt: -1 });
 
 const Experience = mongoose.model("Experience" , experienceSchema);
 

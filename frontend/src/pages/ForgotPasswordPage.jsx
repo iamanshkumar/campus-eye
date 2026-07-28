@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Loader2, Mail, Lock, Eye, EyeOff, ArrowLeft, KeyRound, CheckCircle2 } from 'lucide-react';
+import { Loader2, Mail, Eye, EyeOff, ArrowLeft, KeyRound } from 'lucide-react';
 import api from '../utils/api';
 import { Helmet } from 'react-helmet-async';
 
@@ -124,8 +124,10 @@ const ForgotPasswordPage = () => {
         <title>Forgot Password | Campus Eye</title>
         <meta name="description" content="Reset your campus eye password." />
       </Helmet>
-    <div className="flex min-h-screen items-center justify-center bg-amber-50 px-4">
-      <div className="p-6 md:p-8 pb-6 bg-emerald-900 rounded-2xl shadow-xl w-full max-w-md transition-all duration-300">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 relative overflow-hidden px-4 py-10">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-emerald-100/50 via-teal-50/30 to-transparent blur-3xl pointer-events-none -z-10" />
+
+      <div className="p-8 md:p-10 bg-white rounded-3xl shadow-xl border border-zinc-200/90 w-full max-w-md transition-all duration-300">
         
         <AnimatePresence mode="wait">
           {step === 1 ? (
@@ -138,49 +140,47 @@ const ForgotPasswordPage = () => {
             >
               <button 
                 onClick={() => navigate('/login')} 
-                className="flex items-center gap-1.5 text-emerald-100 hover:text-amber-50 text-sm font-medium mb-4 group cursor-pointer transition duration-300"
+                className="flex items-center gap-1.5 text-zinc-500 hover:text-emerald-950 text-xs font-bold mb-5 group cursor-pointer transition-colors"
               >
                 <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
                 Back to Login
               </button>
 
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center shadow-md">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-emerald-50 border border-emerald-200/80 rounded-2xl flex items-center justify-center shadow-2xs">
                   <Mail className="text-emerald-900" size={20} />
                 </div>
                 <div>
-                  <h2 className="text-2xl text-amber-50 font-bold leading-tight">Forgot Password?</h2>
-                  <p className="text-emerald-100/70 text-xs mt-0.5 font-medium">No worries, we'll send you recovery steps.</p>
+                  <h2 className="text-xl font-extrabold text-zinc-900 leading-tight">Forgot Password?</h2>
+                  <p className="text-xs text-zinc-400 font-medium">We'll send a 6-digit code to your email.</p>
                 </div>
               </div>
 
               <form className="flex flex-col gap-4 mt-6 w-full" onSubmit={handleRequestOtp}>
-                <div className="flex flex-col gap-2">
-                  <label className="text-amber-50 text-sm font-medium flex items-center gap-1.5">
-                    Email Address
+                <div className="flex flex-col gap-1">
+                  <label className="text-zinc-700 text-xs font-bold uppercase tracking-wider">
+                    Registered Email
                   </label>
-                  <div className="relative">
-                    <input 
-                      disabled={isLoading}
-                      type="email"
-                      required
-                      placeholder="e.g., student@college.edu"
-                      className="w-full border rounded px-3 py-2.5 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50 text-emerald-950 font-medium"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)} 
-                    />
-                  </div>
+                  <input 
+                    disabled={isLoading}
+                    type="email"
+                    required
+                    placeholder="e.g. student@college.edu"
+                    className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-zinc-900 font-semibold text-sm focus:bg-white focus:ring-2 focus:ring-emerald-800/20 focus:border-emerald-700 outline-none transition-all placeholder:text-zinc-400 disabled:opacity-50"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)} 
+                  />
                 </div>
 
                 <button
                   disabled={isLoading}
-                  className="bg-amber-50 text-emerald-900 hover:bg-amber-100 transition duration-300 cursor-pointer rounded px-3 py-3 mt-2 font-bold flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70 shadow-md"
+                  className="bg-emerald-950 hover:bg-emerald-900 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-all active:scale-[0.99] cursor-pointer mt-2 flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70 text-sm"
                   type="submit"
                 >
                   {isLoading ? (
                     <>
                       <Loader2 className="animate-spin" size={18} />
-                      Sending...
+                      Sending Code...
                     </>
                   ) : (
                     "Send Verification Code"
@@ -189,8 +189,8 @@ const ForgotPasswordPage = () => {
               </form>
 
               {isLoading && (
-                <p className="text-[10px] text-amber-100/60 text-center mt-3 animate-pulse font-medium">
-                  Note: Email transmission can take up to 10 seconds.
+                <p className="text-[11px] text-zinc-500 text-center mt-3 animate-pulse font-medium">
+                  Note: Code transmission can take up to 10 seconds.
                 </p>
               )}
             </motion.div>
@@ -204,36 +204,36 @@ const ForgotPasswordPage = () => {
             >
               <button 
                 onClick={() => setStep(1)} 
-                className="flex items-center gap-1.5 text-emerald-100 hover:text-amber-50 text-sm font-medium mb-4 group cursor-pointer transition duration-300"
+                className="flex items-center gap-1.5 text-zinc-500 hover:text-emerald-950 text-xs font-bold mb-4 group cursor-pointer transition-colors"
               >
                 <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
                 Change Email Address
               </button>
 
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center shadow-md">
+                <div className="w-10 h-10 bg-emerald-50 border border-emerald-200/80 rounded-2xl flex items-center justify-center shadow-2xs">
                   <KeyRound className="text-emerald-900" size={20} />
                 </div>
                 <div>
-                  <h2 className="text-2xl text-amber-50 font-bold leading-tight">Verify & Reset</h2>
-                  <p className="text-emerald-100/70 text-xs mt-0.5 font-medium">We've sent a 6-digit code to your email.</p>
+                  <h2 className="text-xl font-extrabold text-zinc-900 leading-tight">Verify & Reset</h2>
+                  <p className="text-xs text-zinc-400 font-medium">Enter the code sent to your email.</p>
                 </div>
               </div>
 
-              <div className="bg-emerald-950/40 border border-emerald-800 rounded-lg p-2.5 my-3 text-center">
-                <span className="text-xs text-amber-50/90 font-mono select-all">{email}</span>
+              <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-2.5 my-3 text-center">
+                <span className="text-xs font-bold text-zinc-800 font-mono select-all">{email}</span>
               </div>
 
-              <form className="flex flex-col gap-3.5 mt-4 w-full" onSubmit={handleResetPassword}>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-amber-50 text-sm font-medium">Verification Code</label>
+              <form className="flex flex-col gap-4 mt-4 w-full" onSubmit={handleResetPassword}>
+                <div className="flex flex-col gap-1">
+                  <label className="text-zinc-700 text-xs font-bold uppercase tracking-wider">Verification Code</label>
                   <input 
                     disabled={isLoading}
                     type="text"
                     required
                     maxLength={6}
                     placeholder="------"
-                    className="border rounded px-3 py-2.5 border-neutral-500/40 text-center font-mono text-lg tracking-[0.6em] bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50 text-emerald-950 font-bold placeholder:text-gray-400 placeholder:tracking-normal"
+                    className="w-full px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-zinc-900 font-extrabold text-center font-mono text-xl tracking-[0.5em] focus:bg-white focus:ring-2 focus:ring-emerald-800/20 focus:border-emerald-700 outline-none disabled:opacity-50 placeholder:text-zinc-300 placeholder:tracking-normal"
                     value={otp}
                     onChange={(e) => {
                       const val = e.target.value.replace(/\D/g, '');
@@ -241,22 +241,23 @@ const ForgotPasswordPage = () => {
                     }} 
                   />
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-amber-50 text-sm font-medium">New Password</label>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-zinc-700 text-xs font-bold uppercase tracking-wider">New Password</label>
                   <div className="relative flex items-center">
                     <input 
                       disabled={isLoading}
                       type={showPassword ? "text" : "password"}
                       required
                       placeholder="Minimum 6 characters"
-                      className="w-full border rounded pl-3 pr-10 py-2.5 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50 text-emerald-950 font-medium"
+                      className="w-full pl-4 pr-10 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-zinc-900 font-semibold text-sm focus:bg-white focus:ring-2 focus:ring-emerald-800/20 focus:border-emerald-700 outline-none transition-all placeholder:text-zinc-400 disabled:opacity-50"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)} 
                     />
                     <button
                       type="button"
                       tabIndex="-1"
-                      className="absolute right-3 text-emerald-900/60 hover:text-emerald-900 focus:outline-none"
+                      className="absolute right-3 text-zinc-400 hover:text-zinc-700 focus:outline-none cursor-pointer"
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -264,22 +265,22 @@ const ForgotPasswordPage = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-amber-50 text-sm font-medium">Confirm New Password</label>
+                <div className="flex flex-col gap-1">
+                  <label className="text-zinc-700 text-xs font-bold uppercase tracking-wider">Confirm New Password</label>
                   <div className="relative flex items-center">
                     <input 
                       disabled={isLoading}
                       type={showConfirmPassword ? "text" : "password"}
                       required
                       placeholder="Re-enter password"
-                      className="w-full border rounded pl-3 pr-10 py-2.5 border-neutral-500/40 text-sm bg-emerald-50 focus:ring-2 focus:ring-amber-200 outline-none disabled:opacity-50 text-emerald-950 font-medium"
+                      className="w-full pl-4 pr-10 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-zinc-900 font-semibold text-sm focus:bg-white focus:ring-2 focus:ring-emerald-800/20 focus:border-emerald-700 outline-none transition-all placeholder:text-zinc-400 disabled:opacity-50"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)} 
                     />
                     <button
                       type="button"
                       tabIndex="-1"
-                      className="absolute right-3 text-emerald-900/60 hover:text-emerald-900 focus:outline-none"
+                      className="absolute right-3 text-zinc-400 hover:text-zinc-700 focus:outline-none cursor-pointer"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
                       {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -289,7 +290,7 @@ const ForgotPasswordPage = () => {
 
                 <button
                   disabled={isLoading}
-                  className="bg-amber-50 text-emerald-900 hover:bg-amber-100 transition duration-300 cursor-pointer rounded px-3 py-3 mt-3 font-bold flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70 shadow-md"
+                  className="bg-emerald-950 hover:bg-emerald-900 text-white font-bold py-3.5 px-4 rounded-xl shadow-md transition-all active:scale-[0.99] cursor-pointer mt-2 flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-70 text-sm"
                   type="submit"
                 >
                   {isLoading ? (
@@ -303,16 +304,16 @@ const ForgotPasswordPage = () => {
                 </button>
               </form>
 
-              <div className="text-center mt-5 text-sm text-emerald-100">
+              <div className="text-center mt-5 text-xs text-zinc-500 font-medium">
                 {resendTimer > 0 ? (
-                  <p className="text-emerald-100/60 font-medium">
-                    Resend code in <span className="font-bold text-amber-50">{resendTimer}s</span>
+                  <p>
+                    Resend code in <span className="font-bold text-emerald-900">{resendTimer}s</span>
                   </p>
                 ) : (
                   <button
                     onClick={handleResendOtp}
                     disabled={isLoading}
-                    className="text-amber-50 font-bold hover:underline cursor-pointer disabled:opacity-50"
+                    className="text-emerald-900 font-bold hover:underline cursor-pointer disabled:opacity-50"
                   >
                     Resend verification code
                   </button>

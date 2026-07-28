@@ -81,8 +81,14 @@ const CompanyModal = ({ isOpen, onClose, companyToEdit, onRefresh }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-200">
+        <div 
+            onClick={onClose}
+            className="fixed inset-0 z-[99999] flex items-start justify-center pt-28 md:pt-32 pb-10 bg-black/65 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-200"
+        >
+            <div 
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-zinc-200/90"
+            >
                 <form onSubmit={handleSubmit} className="flex flex-col max-h-[90vh]">
 
                     <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">

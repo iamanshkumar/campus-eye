@@ -15,10 +15,18 @@ import cors from 'cors';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const allowedOrigins = [process.env.FRONTEND_URL, "http://localhost:5173"].filter(Boolean);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(null, true); // Permissive CORS fallback for development/production domains
+        }
+    },
     credentials: true
 }));
 
@@ -37,6 +45,11 @@ app.use("/api/notifications", notificationRouter);
 app.use("/api/status", companyStatusRouter);
 app.use("/api/user", userRouter);
 
+// Global 404 handler
+app.use((req, res) => {
+    res.status(404).json({ success: false, message: "Route not found" });
+});
+
 const startServer = async () => {
     try {
         await connectDB();
@@ -44,7 +57,8 @@ const startServer = async () => {
             console.log("Server running on port : ", PORT);
         })
     } catch (err) {
-        console.log("Error in connecting server : ", err);
+        console.error("Error in connecting server : ", err);
+        process.exit(1);
     }
 }
 

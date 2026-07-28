@@ -12,9 +12,14 @@ export const AuthProvider = ({ children }) => {
                 const storedUser = localStorage.getItem("currentUser");
                 if (storedUser) {
                     setUser(JSON.parse(storedUser));
+                    const { data } = await api.get('/api/auth/profile');
+                    if (data.success && data.user) {
+                        updateUser(data.user);
+                    }
                 }
             } catch (err) {
-                console.log("Auth registeration error : ", err);
+                console.log("Auth session verification error : ", err);
+                setUser(null);
                 localStorage.removeItem("currentUser");
             } finally {
                 setLoading(false);
@@ -22,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         checkUser();
-    }, [])
+    }, []);
 
     const updateUser = (data)=>{
         setUser(data);

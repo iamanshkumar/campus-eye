@@ -20,10 +20,8 @@ const CommentNode = ({comment ,experienceID , onDeleteTopLevel})=>{
 
     const [upvotes, setUpvotes] = useState(getCount(comment.upvotes));
     const [downvotes, setDownvotes] = useState(getCount(comment.downvotes));
-    
-    const hasUpvoted = comment.upvotes?.includes(user?._id);
-    const hasDownvoted = comment.downvotes?.includes(user?._id);
-
+    const [userUpvoted, setUserUpvoted] = useState(Array.isArray(comment.upvotes) ? comment.upvotes.includes(user?._id) : false);
+    const [userDownvoted, setUserDownvoted] = useState(Array.isArray(comment.downvotes) ? comment.downvotes.includes(user?._id) : false);
 
     const handleDelete = async()=>{
         if (!window.confirm("Are you sure you want to delete this comment?")) return;
@@ -67,25 +65,33 @@ const CommentNode = ({comment ,experienceID , onDeleteTopLevel})=>{
     }
 
     const handleUpvote = async()=>{
-        setUpvotes(prev=>prev+1);
         try{
             const res = await api.put(`/api/comments/${comment._id}/upvote`, {});
-            setUpvotes(res.data.data.upvotes.length);
-            setDownvotes(res.data.data.downvotes.length);
+            if (res.data.success) {
+                const newUpvotes = res.data.data.upvotes || [];
+                const newDownvotes = res.data.data.downvotes || [];
+                setUpvotes(newUpvotes.length);
+                setDownvotes(newDownvotes.length);
+                setUserUpvoted(newUpvotes.includes(user?._id));
+                setUserDownvoted(newDownvotes.includes(user?._id));
+            }
         }catch(err){
-            setUpvotes(prev => prev - 1);
             toast.error("Failed to upvote");
         }
     }
 
     const handleDownvote = async () => {
-        setDownvotes(prev => prev + 1); 
         try {
             const res = await api.put(`/api/comments/${comment._id}/downvote`, {});
-            setUpvotes(res.data.data.upvotes.length);
-            setDownvotes(res.data.data.downvotes.length);
+            if (res.data.success) {
+                const newUpvotes = res.data.data.upvotes || [];
+                const newDownvotes = res.data.data.downvotes || [];
+                setUpvotes(newUpvotes.length);
+                setDownvotes(newDownvotes.length);
+                setUserUpvoted(newUpvotes.includes(user?._id));
+                setUserDownvoted(newDownvotes.includes(user?._id));
+            }
         } catch (err) {
-            setDownvotes(prev => prev - 1);
             toast.error("Failed to downvote");
         }
     };
@@ -108,13 +114,13 @@ const CommentNode = ({comment ,experienceID , onDeleteTopLevel})=>{
         <p className="text-gray-700 mt-1 mb-2">{comment.description}</p>
 
         <div className="flex items-center gap-4 border-t pt-2 mt-2">
-            <button onClick={handleUpvote} className="flex items-center gap-1 text-gray-500 hover:text-green-600 transition">
-                <ArrowUp size={16} fill={hasUpvoted ? "currentColor" : "none"}/>
+            <button onClick={handleUpvote} className={`flex items-center gap-1 transition ${userUpvoted ? 'text-emerald-700 font-bold' : 'text-gray-500 hover:text-emerald-700'}`}>
+                <ArrowUp size={16} fill={userUpvoted ? "currentColor" : "none"}/>
                 <span className="text-xs">{upvotes}</span>
             </button>
 
-            <button onClick={handleDownvote} className="flex items-center gap-1 text-gray-500 hover:text-red-500 transition">
-                <ArrowDown size={16} fill={hasDownvoted ? "currentColor" : "none"}/>
+            <button onClick={handleDownvote} className={`flex items-center gap-1 transition ${userDownvoted ? 'text-rose-700 font-bold' : 'text-gray-500 hover:text-rose-700'}`}>
+                <ArrowDown size={16} fill={userDownvoted ? "currentColor" : "none"}/>
                 <span className="text-xs">{downvotes}</span>
             </button>
 

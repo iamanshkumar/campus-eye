@@ -57,13 +57,24 @@ const ApproveExperienceModal = ({ isOpen, onClose, experience, onSuccess }) => {
   if (!isOpen || !experience) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
-      <div className="bg-white p-6 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto relative shadow-2xl">
-        <button onClick={onClose} className="absolute top-4 right-4 cursor-pointer">
-          <CircleX size={24} className="text-gray-400 hover:text-red-500 transition-colors" />
+    <div 
+      onClick={onClose}
+      className="fixed inset-0 bg-black/65 backdrop-blur-xs flex justify-center items-start pt-28 md:pt-32 pb-10 z-[99999] p-4 overflow-y-auto animate-in fade-in duration-200"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white p-6 md:p-8 rounded-3xl w-full max-w-lg shadow-2xl border border-zinc-200/90 relative animate-in zoom-in-95 duration-200"
+      >
+        <button 
+          type="button" 
+          onClick={onClose} 
+          className="absolute top-5 right-5 p-1.5 bg-zinc-100 hover:bg-rose-50 text-zinc-400 hover:text-rose-600 rounded-full transition-all cursor-pointer z-10"
+          title="Close Modal"
+        >
+          <CircleX size={20} />
         </button>
 
-        <h2 className="text-xl font-bold text-emerald-950 mb-4 border-b pb-2">
+        <h2 className="text-xl font-bold text-zinc-900 mb-2 border-b border-zinc-100 pb-3 pr-8">
           Approve: {experience.unlistedCompanyName}
         </h2>
         <p className="text-sm text-gray-500 mb-4">

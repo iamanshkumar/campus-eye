@@ -1,4 +1,4 @@
-import { addExpereience , getAllExperience , deleteExperience , getExperience, upvoteExperience, downvoteExperience , getMyExperiences, getExperiencesByStatus, approveExperience, rejectExperience } from "../controller/experienceController.js";
+import { addExperience , getAllExperience , deleteExperience , getExperience, upvoteExperience, downvoteExperience , getMyExperiences, getExperiencesByStatus, approveExperience, rejectExperience } from "../controller/experienceController.js";
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 import { isAdmin } from "../middleware/isAdmin.js";
@@ -6,7 +6,7 @@ import { upload } from "../middleware/multer.js";
 
 const experienceRouter = express.Router();
 
-experienceRouter.post("/" , protect , addExpereience);
+experienceRouter.post("/" , protect , addExperience);
 experienceRouter.get("/" , getAllExperience);
 experienceRouter.get("/me", protect, getMyExperiences);
 experienceRouter.get("/admin/status", protect, isAdmin, getExperiencesByStatus);

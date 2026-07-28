@@ -51,12 +51,16 @@ export const addCompany = async(req , res)=>{
     }
 }
 
+const escapeRegex = (string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 export const getAllCompanies = async(req,res)=>{
     try{
         const filter ={};
 
         if (req.query.name) {
-            filter.name = { $regex: req.query.name, $options: 'i' };
+            filter.name = { $regex: escapeRegex(req.query.name), $options: 'i' };
         }
         
         if(req.query.status){
@@ -80,11 +84,11 @@ export const getAllCompanies = async(req,res)=>{
         if (req.query.devStack) {
             const terms = req.query.devStack.split(",").map(t => t.trim()).filter(Boolean);
             filter.devStack = {
-                $elemMatch: { $in: terms.map(t => new RegExp(t, 'i')) }
+                $elemMatch: { $in: terms.map(t => new RegExp(escapeRegex(t), 'i')) }
             };
         }
 
-        const companies = await Company.find(filter);
+        const companies = await Company.find(filter).sort({ visitingDate: 1 });
 
         return res.status(200).json({
             success : true,
@@ -95,7 +99,7 @@ export const getAllCompanies = async(req,res)=>{
     }catch(err){
         return res.status(500).json({
             success : false,
-            message : `Fetching companies error : ${err}`
+            message : `Fetching companies error : ${err.message || err}`
         })
     }
 }

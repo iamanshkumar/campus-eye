@@ -34,7 +34,7 @@ export const targetCompany = async(req , res)=>{
     }
 }
 
-export const getAllTragetingCompanies = async(req , res)=>{
+export const getAllTargetingCompanies = async(req , res)=>{
     try{
         const user = req.user._id;
         const companies = await UserCompanyStatus.find({user : user}).populate('company', 'name logo');

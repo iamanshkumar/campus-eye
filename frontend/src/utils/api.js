@@ -5,4 +5,17 @@ const api = axios.create({
     withCredentials: true
 });
 
-export default api
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem("currentUser");
+            if (window.location.pathname !== '/login' && window.location.pathname !== '/' && window.location.pathname !== '/forgot-password') {
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
+export default api;

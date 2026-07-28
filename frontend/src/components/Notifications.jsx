@@ -50,13 +50,13 @@ const Notifications = ({ onClose }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-2xl border border-emerald-100 overflow-hidden flex flex-col max-h-[400px]">
-      <div className="p-3 bg-emerald-50 border-b border-emerald-100 flex justify-between items-center">
-        <h3 className="font-bold text-emerald-900">Notifications</h3>
+    <div className="bg-white rounded-2xl shadow-2xl border border-zinc-200/90 overflow-hidden flex flex-col max-h-[420px] z-50 animate-in fade-in zoom-in-95 duration-150">
+      <div className="p-3.5 bg-zinc-50 border-b border-zinc-200/80 flex justify-between items-center">
+        <h3 className="font-bold text-zinc-900 text-sm">Notifications</h3>
         {notifications.some(n => !n.isRead) && (
           <button 
             onClick={handleMarkAllAsRead}
-            className="text-xs text-emerald-600 hover:text-emerald-800 flex items-center gap-1 cursor-pointer"
+            className="text-xs text-emerald-800 hover:text-emerald-950 font-bold flex items-center gap-1 cursor-pointer"
           >
             <Check size={14} /> Mark all read
           </button>

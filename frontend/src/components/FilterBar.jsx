@@ -7,68 +7,100 @@ const FilterBar = ({ filters, setFilters, onClear }) => {
     setFilters(prev => ({ ...prev, [name]: value }));
   };
 
+  const popularChips = ['React', 'Node.js', 'Java', 'Python', 'C++', 'SQL', 'System Design'];
+
+  const toggleChip = (tech) => {
+    if (filters.devStack === tech) {
+      setFilters(prev => ({ ...prev, devStack: '' }));
+    } else {
+      setFilters(prev => ({ ...prev, devStack: tech }));
+    }
+  };
+
   return (
-    <div className="bg-white/80 backdrop-blur-md border border-emerald-100 rounded-3xl p-4 mb-6 shadow-sm flex flex-wrap items-center gap-4">
-      <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-2xl border border-gray-100 flex-1 min-w-[200px]">
-        <Search size={18} className="text-gray-400" />
-        <input 
-          type="text" 
-          placeholder="Search tech (e.g. React, Java)..." 
-          name="devStack"
-          value={filters.devStack}
-          onChange={handleChange}
-          className="bg-transparent outline-none text-sm w-full font-medium"
-        />
+    <div className="bg-white/80 backdrop-blur-md border border-emerald-100 rounded-3xl p-4 mb-6 shadow-sm flex flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-2xl border border-gray-100 flex-1 min-w-[200px]">
+          <Search size={18} className="text-gray-400" />
+          <input 
+            type="text" 
+            placeholder="Search tech (e.g. React, Java)..." 
+            name="devStack"
+            value={filters.devStack}
+            onChange={handleChange}
+            className="bg-transparent outline-none text-sm w-full font-medium"
+          />
+        </div>
+
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Min Package Filter */}
+          <select 
+            name="minPackage" 
+            value={filters.minPackage} 
+            onChange={handleChange}
+            className="px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-emerald-900 outline-none cursor-pointer hover:bg-emerald-50 transition-colors"
+          >
+            <option value="">Min Package</option>
+            <option value="5">5+ LPA</option>
+            <option value="10">10+ LPA</option>
+            <option value="15">15+ LPA</option>
+            <option value="25">25+ LPA</option>
+          </select>
+
+          {/* CGPA Eligibility Filter */}
+          <select 
+            name="eligibility" 
+            value={filters.eligibility} 
+            onChange={handleChange}
+            className="px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-emerald-900 outline-none cursor-pointer hover:bg-emerald-50 transition-colors"
+          >
+            <option value="">Max CGPA Req.</option>
+            <option value="6">6.0 & below</option>
+            <option value="7">7.0 & below</option>
+            <option value="8">8.0 & below</option>
+            <option value="9">9.0 & below</option>
+          </select>
+
+          {/* Status Filter */}
+          <select 
+            name="status" 
+            value={filters.status} 
+            onChange={handleChange}
+            className="px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-emerald-900 outline-none cursor-pointer hover:bg-emerald-50 transition-colors"
+          >
+            <option value="">Status</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="visited">Visited</option>
+          </select>
+
+          <button 
+            onClick={onClear}
+            className="p-2 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+            title="Clear Filters"
+          >
+            <X size={20} />
+          </button>
+        </div>
       </div>
 
-      <div className="flex items-center gap-3 flex-wrap">
-        {/* Min Package Filter */}
-        <select 
-          name="minPackage" 
-          value={filters.minPackage} 
-          onChange={handleChange}
-          className="px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-emerald-900 outline-none cursor-pointer hover:bg-emerald-50 transition-colors"
-        >
-          <option value="">Min Package</option>
-          <option value="5">5+ LPA</option>
-          <option value="10">10+ LPA</option>
-          <option value="15">15+ LPA</option>
-          <option value="25">25+ LPA</option>
-        </select>
-
-        {/* CGPA Eligibility Filter */}
-        <select 
-          name="eligibility" 
-          value={filters.eligibility} 
-          onChange={handleChange}
-          className="px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-emerald-900 outline-none cursor-pointer hover:bg-emerald-50 transition-colors"
-        >
-          <option value="">Max CGPA Req.</option>
-          <option value="6">6.0 & below</option>
-          <option value="7">7.0 & below</option>
-          <option value="8">8.0 & below</option>
-          <option value="9">9.0 & below</option>
-        </select>
-
-        {/* Status Filter */}
-        <select 
-          name="status" 
-          value={filters.status} 
-          onChange={handleChange}
-          className="px-4 py-2 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-bold text-emerald-900 outline-none cursor-pointer hover:bg-emerald-50 transition-colors"
-        >
-          <option value="">Status</option>
-          <option value="upcoming">Upcoming</option>
-          <option value="visited">Visited</option>
-        </select>
-
-        <button 
-          onClick={onClear}
-          className="p-2 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
-          title="Clear Filters"
-        >
-          <X size={20} />
-        </button>
+      <div className="flex items-center gap-2 flex-wrap pt-1 border-t border-gray-100/60">
+        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mr-1">Quick Filters:</span>
+        {popularChips.map(tech => {
+          const isActive = filters.devStack.toLowerCase() === tech.toLowerCase();
+          return (
+            <button
+              key={tech}
+              onClick={() => toggleChip(tech)}
+              className={`text-xs px-3 py-1 rounded-full font-bold transition-all cursor-pointer border ${
+                isActive
+                  ? 'bg-emerald-900 text-white border-emerald-900 shadow-xs scale-105'
+                  : 'bg-emerald-50/60 text-emerald-900 border-emerald-100 hover:bg-emerald-100'
+              }`}
+            >
+              #{tech}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

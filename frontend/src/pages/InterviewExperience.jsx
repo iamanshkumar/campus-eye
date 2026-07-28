@@ -3,7 +3,8 @@ import api from '../utils/api';
 import toast from 'react-hot-toast';
 import ExperienceCard from '../components/ExperienceCard';
 import AddExperienceModal from '../components/AddExperienceModal';
-import { Loader2, FileText } from 'lucide-react';
+import { ExperienceCardSkeleton } from '../components/SkeletonLoaders';
+import { FileText } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 const InterviewExperience = () => {
@@ -53,9 +54,10 @@ const InterviewExperience = () => {
       />
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-emerald-800/40">
-          <Loader2 className="animate-spin mb-2" size={40} />
-          <p className="font-bold">Loading experiences...</p>
+        <div className="flex flex-col gap-3">
+          <ExperienceCardSkeleton />
+          <ExperienceCardSkeleton />
+          <ExperienceCardSkeleton />
         </div>
       ) : experiences.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 bg-white/50 rounded-4xl border-2 border-dashed border-emerald-100">

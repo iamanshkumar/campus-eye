@@ -29,7 +29,7 @@ export const sendOtpEmail = async(targetEmail , otpCode)=>{
         console.log("Email sent successfully via Resend HTTPS API!", data.id);
         return data;
     }catch(err){
-        console.error(" Resend API Error:", error);
-    throw new Error('Failed to deliver verification email.');
+        console.error(" Resend API Error:", err);
+        throw new Error('Failed to deliver verification email.');
     }
 }

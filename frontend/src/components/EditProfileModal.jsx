@@ -79,8 +79,14 @@ const EditProfileModal = ({isOpen , onClose})=>{
     const isStudent = user?.role==='student';
 
     return(
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-200">
+        <div 
+            onClick={onClose}
+            className="fixed inset-0 z-[99999] flex items-start justify-center pt-28 md:pt-32 pb-10 bg-black/65 backdrop-blur-xs p-4 overflow-y-auto animate-in fade-in duration-200"
+        >
+            <div 
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-zinc-200/90"
+            >
                 <form onSubmit={handleSubmit}>
 
                     <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">

@@ -26,8 +26,8 @@ export const updateCheckList = async(req , res)=>{
         })
     }catch(err){
         return res.status(500).json({
-            succes : false,
-            message : `Checklist updating error : ${err}`
+            success : false,
+            message : `Checklist updating error : ${err.message || err}`
         })
     }
 }

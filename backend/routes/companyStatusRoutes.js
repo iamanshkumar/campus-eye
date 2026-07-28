@@ -1,11 +1,11 @@
 import express from "express";
-import { getAllTragetingCompanies, removeCompanyStatus, targetCompany, updateCompanyStatus } from "../controller/companyStatusController.js";
+import { getAllTargetingCompanies, removeCompanyStatus, targetCompany, updateCompanyStatus } from "../controller/companyStatusController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const companyStatusRouter = express.Router();
 
 companyStatusRouter.post("/" , protect , targetCompany);
-companyStatusRouter.get("/" , protect , getAllTragetingCompanies);
+companyStatusRouter.get("/" , protect , getAllTargetingCompanies);
 companyStatusRouter.put("/:companyId" , protect , updateCompanyStatus);
 companyStatusRouter.delete("/:companyId" , protect , removeCompanyStatus);
 
